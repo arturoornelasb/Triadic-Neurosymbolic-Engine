@@ -31,7 +31,8 @@
 
 \title{\Large Prime Factorization as a Neurosymbolic Bridge:\\ Projecting Continuous Embeddings into Discrete Algebraic Space\\ for Deterministic Verification}
 
-\author{Arturo Ornelas \\ \textit{Independent Researcher} \\ \texttt{arturoornelasb@github}}
+% TODO: Replace with your real email before arXiv submission
+\author{J. Arturo Ornelas Brand \\ \textit{Independent Researcher} \\ \texttt{arturo.ornelas@proton.me}}
 \date{}
 
 \maketitle
@@ -69,6 +70,14 @@ We introduce a \textbf{lightweight bridging mechanism}: project continuous embed
     \item Eight experiments with \textbf{real data and honest limitations}.\vspace{1pt}
     \item A complete open-source implementation.
 \end{enumerate}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.85\columnwidth]{figures/pipeline.png}
+    \caption{Pipeline overview: Text concepts are encoded into continuous embeddings via a pre-trained sentence transformer, projected through $k$ LSH hyperplanes into binary activation vectors, and then mapped to composite prime integers. The resulting integers support three algebraic operations impossible under cosine similarity.}
+    \label{fig:pipeline}
+\end{figure}
+
 
 % ============================================================
 %  2. RELATED WORK
@@ -410,74 +419,7 @@ Our prime lattice resembles the concept lattice in Formal Concept Analysis~\cite
 
 \subsection{Practical Integration with Declarative Systems}
 
-The prime encoding enables zero-overhead integration with legacy symbolic systems. Below we show real queries in PostgreSQL and SWI-Prolog using the exact values obtained in Experiment 6 (seed 42).
-
-\begin{lstlisting}[language=SQL, caption={PostgreSQL integration}, label={lst:sql}]
--- =============================================
--- NEUROSYMBOLIC PRIME ENCODING -> SQL
--- =============================================
-
-CREATE TABLE semantic_concepts (
-    concept_name     TEXT PRIMARY KEY,
-    prime_encoding   BIGINT NOT NULL
-);
-
-INSERT INTO semantic_concepts (concept_name, prime_encoding) VALUES
-    ('King',    3230),   -- 2x5x17x19
-    ('Queen',   1615),   --   5x17x19
-    ('Man',     85085),  -- 5x7x11x13x17
-    ('Woman',   1105),   -- 5x13x17
-    ('Dog',     19019),  -- 7x11x13x19
-    ('Cat',     6783),   -- 3x7x17x19
-    ('Love',    7735),   -- 5x7x13x17
-    ('Hate',    1105);   -- 5x13x17
-
--- 1. Logical Subsumption
-SELECT c1.concept_name AS more_specific, c2.concept_name AS subsumed
-FROM semantic_concepts c1 CROSS JOIN semantic_concepts c2
-WHERE c1.prime_encoding % c2.prime_encoding = 0 AND c1.concept_name != c2.concept_name;
-
--- 2. Algebraic Composition (LCM)
-WITH compose AS (
-    SELECT 'King+Dog' AS new_concept,
-    ABS(3230::numeric * 19019 / gcd(3230, 19019)) AS lcm_value
-)
-SELECT new_concept, lcm_value, lcm_value % 3230 AS sub_king, lcm_value % 19019 AS sub_dog;
-
--- 3. Abductive Gap Analysis
-SELECT 'King' AS A, 'Man' AS B, gcd(3230, 85085) AS shared_gcd,
-    3230 / gcd(3230, 85085) AS unique_to_king,
-    85085 / gcd(3230, 85085) AS unique_to_man;
-\end{lstlisting}
-
-\begin{lstlisting}[language=Prolog, caption={SWI-Prolog integration}, label={lst:prolog}]
-% =============================================
-% NEUROSYMBOLIC PRIME ENCODING -> Prolog
-% =============================================
-
-:- use_module(library(clpfd)).
-
-% Facts
-concept('King',    3230).
-concept('Queen',   1615).
-concept('Man',     85085).
-concept('Woman',   1105).
-concept('Dog',     19019).
-concept('Cat',     6783).
-concept('Love',    7735).
-concept('Hate',    1105).
-
-% Operation 1: Logical Subsumption
-subsumes(A, B) :- concept(A, PhiA), concept(B, PhiB), PhiA mod PhiB =:= 0.
-
-% Operation 2: Composition (LCM)
-compose(A, B, LCM) :- concept(A, PhiA), concept(B, PhiB),
-    G is gcd(PhiA, PhiB), LCM is abs(PhiA * PhiB) / G.
-
-% Operation 3: Gap Analysis
-gap_analysis(A, B, Shared, UniqueA, UniqueB) :- concept(A, PhiA), concept(B, PhiB),
-    Shared is gcd(PhiA, PhiB), UniqueA is PhiA / Shared, UniqueB is PhiB / Shared.
-\end{lstlisting}
+The prime encoding enables zero-overhead integration with legacy symbolic systems. We demonstrate real queries in PostgreSQL and SWI-Prolog using the exact values from Experiment~6 (see Appendix~\ref{sec:appendix}).
 
 % ============================================================
 %  7. CONCLUSION
@@ -491,6 +433,61 @@ We are transparent: the semantic validity depends on LSH projection quality, whi
 This work contributes a tool to the neurosymbolic toolkit---not replacing continuous methods, but offering a complementary verification layer that trades continuous nuance for discrete certitude.
 
 \bibliographystyle{plain}
-\bibliography{references}
+\bibliography{src/references}
+
+% ============================================================
+%  APPENDIX: DECLARATIVE INTEGRATION
+% ============================================================
+\appendix
+\section{Declarative System Integration}
+\label{sec:appendix}
+
+Below we show complete, working examples of prime-encoded semantic queries using the exact values from Experiment~6 (seed~42).
+
+\begin{lstlisting}[language=SQL, caption={PostgreSQL: subsumption, composition, and gap analysis via prime encodings.}, label={lst:sql}]
+CREATE TABLE semantic_concepts (
+    concept_name     TEXT PRIMARY KEY,
+    prime_encoding   BIGINT NOT NULL
+);
+
+INSERT INTO semantic_concepts VALUES
+    ('King', 3230), ('Queen', 1615),
+    ('Man', 85085), ('Woman', 1105),
+    ('Dog', 19019), ('Cat', 6783);
+
+-- Logical Subsumption
+SELECT c1.concept_name, c2.concept_name
+FROM semantic_concepts c1 CROSS JOIN semantic_concepts c2
+WHERE c1.prime_encoding % c2.prime_encoding = 0
+  AND c1.concept_name != c2.concept_name;
+
+-- Abductive Gap Analysis
+SELECT 'King' AS A, 'Man' AS B,
+    gcd(3230, 85085) AS shared,
+    3230 / gcd(3230, 85085) AS unique_king,
+    85085 / gcd(3230, 85085) AS unique_man;
+\end{lstlisting}
+
+\begin{lstlisting}[language=Prolog, caption={SWI-Prolog: algebraic operations as logic predicates.}, label={lst:prolog}]
+:- use_module(library(clpfd)).
+
+concept('King', 3230).  concept('Queen', 1615).
+concept('Man', 85085).  concept('Woman', 1105).
+
+subsumes(A, B) :-
+    concept(A, PhiA), concept(B, PhiB),
+    PhiA mod PhiB =:= 0.
+
+compose(A, B, LCM) :-
+    concept(A, PhiA), concept(B, PhiB),
+    G is gcd(PhiA, PhiB),
+    LCM is abs(PhiA * PhiB) / G.
+
+gap_analysis(A, B, Shared, UA, UB) :-
+    concept(A, PhiA), concept(B, PhiB),
+    Shared is gcd(PhiA, PhiB),
+    UA is PhiA / Shared,
+    UB is PhiB / Shared.
+\end{lstlisting}
 
 \end{document}
