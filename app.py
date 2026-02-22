@@ -41,14 +41,28 @@ if "word_list" not in st.session_state:
         "Computer", "Algorithm", "Software", "Hardware", "Internet", "Programmer",
         "Dog", "Cat", "Animal", "Pet", "Veterinarian"
     ]
+if "embeddings_cache" not in st.session_state:
+    st.session_state.embeddings_cache = {}
 if "db_ingestor" not in st.session_state:
     st.session_state.db_ingestor = DatabaseIngestor(encoder, st.session_state.mapper)
+
+def get_cached_embeddings(word_list):
+    import numpy as np
+    missing = [w for w in word_list if w not in st.session_state.embeddings_cache]
+    if missing:
+        new_embs = encoder.encode(missing)
+        for w, emb in zip(missing, new_embs):
+            st.session_state.embeddings_cache[w] = emb
+    return np.array([st.session_state.embeddings_cache[w] for w in word_list])
 
 def recompute_mapping():
     if not st.session_state.word_list:
         return
     st.session_state.mapper = DiscreteMapper(n_bits=st.session_state.lsh_bits, seed=st.session_state.lsh_seed)
-    embeddings = encoder.encode(st.session_state.word_list)
+    
+    # CRITICAL OPTIMIZATION: Fetch from cache instead of re-running PyTorch on every slider change
+    embeddings = get_cached_embeddings(st.session_state.word_list)
+    
     st.session_state.prime_map = st.session_state.mapper.fit_transform(st.session_state.word_list, embeddings)
     st.session_state.db_ingestor.mapper = st.session_state.mapper
 
@@ -306,17 +320,21 @@ with tab4:
                                 graph_B.add_edge(w1, w2)
 
                     # 2. Compare topological shortest paths instead of direct connections
+                    # CRITICAL OPTIMIZATION: Precompute all paths in O(V^3) once, then O(1) lookup
+                    paths_A = dict(nx.all_pairs_shortest_path_length(graph_A))
+                    paths_B = dict(nx.all_pairs_shortest_path_length(graph_B))
+                    
                     for i in range(len(words)):
                         for j in range(i + 1, len(words)):
                             total_pairs += 1
                             w1 = words[i]
                             w2 = words[j]
                             
-                            has_path_A = nx.has_path(graph_A, w1, w2)
-                            has_path_B = nx.has_path(graph_B, w1, w2)
+                            dist_A = paths_A.get(w1, {}).get(w2, float('inf'))
+                            dist_B = paths_B.get(w1, {}).get(w2, float('inf'))
                             
-                            dist_A = nx.shortest_path_length(graph_A, w1, w2) if has_path_A else float('inf')
-                            dist_B = nx.shortest_path_length(graph_B, w1, w2) if has_path_B else float('inf')
+                            has_path_A = dist_A != float('inf')
+                            has_path_B = dist_B != float('inf')
                             
                             # If the traversal distance differs, the semantics diverged
                             if dist_A != dist_B:

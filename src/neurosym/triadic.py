@@ -123,18 +123,8 @@ class DiscreteValidator:
         """Returns the unique prime factors of n."""
         if n <= 1:
             return []
-        factors = []
-        d = 2
-        temp = n
-        while d * d <= temp:
-            if temp % d == 0:
-                factors.append(d)
-                while temp % d == 0:
-                    temp //= d
-            d += 1
-        if temp > 1:
-            factors.append(temp)
-        return factors
+        import sympy
+        return list(sympy.factorint(n).keys())
 
     @staticmethod
     def subsumes(a: int, b: int) -> bool:
