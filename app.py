@@ -19,8 +19,57 @@ import networkx as nx
 st.set_page_config(
     page_title="Triadic Neurosymbolic Engine",
     page_icon="⚛️",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
+
+# --- Premium Dark Theme CSS ---
+st.markdown("""
+<style>
+    /* Metric cards */
+    [data-testid="stMetric"] {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        border: 1px solid #0f3460;
+        border-radius: 12px;
+        padding: 16px 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    [data-testid="stMetricValue"] {
+        color: #e94560;
+        font-weight: 700;
+    }
+    [data-testid="stMetricLabel"] {
+        color: #a8a8b3;
+    }
+    /* Tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        border-radius: 8px 8px 0 0;
+        padding: 10px 20px;
+        font-weight: 600;
+    }
+    /* Dataframes */
+    .stDataFrame {
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    /* Buttons */
+    .stButton > button[kind="primary"] {
+        border-radius: 8px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+    /* Sidebar refinement */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0d1117 0%, #161b22 100%);
+    }
+    [data-testid="stSidebar"] hr {
+        border-color: #30363d;
+    }
+</style>
+""", unsafe_allow_html=True)
 
 # --- State Management & Initialization ---
 @st.cache_resource
@@ -35,7 +84,6 @@ if "mapper" not in st.session_state:
 if "prime_map" not in st.session_state:
     st.session_state.prime_map = {}
 if "word_list" not in st.session_state:
-    # Preload a more coherent medical/biology/tech default list to show relationships
     st.session_state.word_list = [
         "Doctor", "Hospital", "Medicine", "Nurse", "Surgery", "Patient",
         "Computer", "Algorithm", "Software", "Hardware", "Internet", "Programmer",
@@ -59,30 +107,46 @@ def recompute_mapping():
     if not st.session_state.word_list:
         return
     st.session_state.mapper = DiscreteMapper(n_bits=st.session_state.lsh_bits, seed=st.session_state.lsh_seed)
-    
-    # CRITICAL OPTIMIZATION: Fetch from cache instead of re-running PyTorch on every slider change
     embeddings = get_cached_embeddings(st.session_state.word_list)
-    
     st.session_state.prime_map = st.session_state.mapper.fit_transform(st.session_state.word_list, embeddings)
     st.session_state.db_ingestor.mapper = st.session_state.mapper
 
 # --- Sidebar Controls ---
 with st.sidebar:
-    st.header("⚙️ Engine Parameters")
-    st.markdown("Control how strictly the AI assigns prime semantic factors.")
-    st.slider("LSH Resolution Bits", min_value=2, max_value=32, value=8, step=1, key="lsh_bits", on_change=recompute_mapping, help="Higher bits mean stricter, more disjoint definitions.")
+    st.markdown("## ⚛️ Triadic Engine")
+    st.caption("Deterministic Neurosymbolic Framework")
+    st.markdown("---")
+    st.markdown("#### ⚙️ LSH Parameters")
+    st.slider("Resolution Bits (k)", min_value=2, max_value=32, value=8, step=1, key="lsh_bits", on_change=recompute_mapping, help="Higher bits = stricter, more disjoint semantic definitions.")
     st.number_input("Random Seed", value=42, key="lsh_seed", on_change=recompute_mapping)
     st.markdown("---")
-    st.markdown("**Status:**")
-    st.success(f"Loaded {len(st.session_state.word_list)} active concepts in Prime Memory.")
+    st.markdown("#### 📊 Engine Status")
+    st.metric("Active Concepts", f"{len(st.session_state.word_list)}")
+    unique_primes = len(set(st.session_state.prime_map.values())) if st.session_state.prime_map else 0
+    st.metric("Unique Prime Clusters", f"{unique_primes}")
+    st.markdown("---")
+    st.markdown("#### 🔗 Links")
+    st.markdown("[📄 GitHub Repository](https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine)")
+    st.markdown("[📝 Academic Paper](https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine/tree/main/paper)")
+    st.caption("© 2025 José Arturo Ornelas Brand")
 
 # --- Main Logic ---
 if not st.session_state.prime_map:
     recompute_mapping()
 
-st.title("Triadic Neurosymbolic Engine")
+st.title("⚛️ Triadic Neurosymbolic Engine")
 st.subheader("Deterministic LLM Interpretability & Verification")
-st.markdown("Convert opaque continuous $R^n$ embeddings into transparent, arithmetic Prime Factor integers $Z$ for $O(1)$ logical verification.")
+st.markdown("Convert opaque continuous $R^n$ embeddings into transparent, arithmetic Prime Factor integers $\mathbb{Z}$ for $O(1)$ logical verification.")
+
+# --- Live KPI Metrics ---
+if st.session_state.prime_map:
+    n_concepts = len(st.session_state.word_list)
+    n_clusters = len(set(st.session_state.prime_map.values()))
+    avg_factors = sum(len(validator._prime_factors(p)) for p in st.session_state.prime_map.values()) / max(1, n_concepts)
+    m1, m2, m3 = st.columns(3)
+    m1.metric("📚 Active Concepts", f"{n_concepts}")
+    m2.metric("🧬 Prime Clusters", f"{n_clusters}")
+    m3.metric("🔗 Avg. Factors/Concept", f"{avg_factors:.1f}")
 
 # The unified flow
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
@@ -164,39 +228,62 @@ with tab2:
         min_weight = st.slider("Strictness Filter (Min. Prime Factors Shared)", min_value=1, max_value=8, value=2, 
                                help="Increase this slider to hide weak connections and reveal only strong semantic clusters.")
         
+        # Cluster color palette — nodes are colored by their smallest prime factor (dominant semantic family)
+        CLUSTER_PALETTE = [
+            "#e94560", "#0f3460", "#00bcd4", "#ff6f61", "#6b5b95",
+            "#88b04b", "#f7cac9", "#92a8d1", "#955251", "#b565a7",
+            "#009b77", "#dd4124", "#d65076", "#45b8ac", "#efc050",
+            "#5b5ea6", "#9b2335", "#dfcfbe", "#55b4b0", "#e15d44"
+        ]
+        def get_node_color(prime_value):
+            factors = validator._prime_factors(prime_value)
+            if not factors:
+                return CLUSTER_PALETTE[0]
+            return CLUSTER_PALETTE[factors[0] % len(CLUSTER_PALETTE)]
+        
         nodes, edges = [], []
         added_nodes = set()
         
         if st.button("🕸️ Render Semantic Graph", use_container_width=True, type="primary"):
-            with st.spinner("Calculating GCD intersections for all nodes..."):
-                # Limited to 250 for browser performance if necessary, but networkx/agraph handles a few hundred fine.
-                max_nodes = 300
-                render_list = st.session_state.word_list[:max_nodes]
-                if len(st.session_state.word_list) > max_nodes:
-                    st.warning(f"Graph limited to first {max_nodes} words to prevent browser lag.")
-                
-                for i in range(len(render_list)):
-                    for j in range(i + 1, len(render_list)):
-                        w_a = render_list[i]
-                        w_b = render_list[j]
-                        p_a = st.session_state.prime_map[w_a]
-                        p_b = st.session_state.prime_map[w_b]
+            progress = st.progress(0, text="Building semantic connections...")
+            max_nodes = 300
+            render_list = st.session_state.word_list[:max_nodes]
+            if len(st.session_state.word_list) > max_nodes:
+                st.warning(f"Graph limited to first {max_nodes} words to prevent browser lag.")
+            
+            total_pairs = len(render_list) * (len(render_list) - 1) // 2
+            pair_count = 0
+            
+            for i in range(len(render_list)):
+                for j in range(i + 1, len(render_list)):
+                    pair_count += 1
+                    if pair_count % 500 == 0:
+                        progress.progress(min(pair_count / max(1, total_pairs), 1.0), text=f"Analyzing pair {pair_count}/{total_pairs}...")
+                    
+                    w_a = render_list[i]
+                    w_b = render_list[j]
+                    p_a = st.session_state.prime_map[w_a]
+                    p_b = st.session_state.prime_map[w_b]
+                    
+                    gap = validator.explain_gap(p_a, p_b)
+                    if gap['shared'] > 1:
+                        shared_factors = validator._prime_factors(gap['shared'])
+                        weight = len(shared_factors)
                         
-                        gap = validator.explain_gap(p_a, p_b)
-                        if gap['shared'] > 1:
-                            shared_factors = validator._prime_factors(gap['shared'])
-                            weight = len(shared_factors)
-                            
-                            if weight >= min_weight:
-                                if w_a not in added_nodes:
-                                    nodes.append(Node(id=w_a, label=w_a, size=15, color="#00bcd4"))
-                                    added_nodes.add(w_a)
-                                    
-                                if w_b not in added_nodes:
-                                    nodes.append(Node(id=w_b, label=w_b, size=15, color="#00bcd4"))
-                                    added_nodes.add(w_b)
-                                    
-                                edges.append(Edge(source=w_a, target=w_b, title=f"Shared Primes: {shared_factors}", width=weight))
+                        if weight >= min_weight:
+                            if w_a not in added_nodes:
+                                color_a = get_node_color(p_a)
+                                nodes.append(Node(id=w_a, label=w_a, size=15 + weight, color=color_a))
+                                added_nodes.add(w_a)
+                                
+                            if w_b not in added_nodes:
+                                color_b = get_node_color(p_b)
+                                nodes.append(Node(id=w_b, label=w_b, size=15 + weight, color=color_b))
+                                added_nodes.add(w_b)
+                                
+                            edges.append(Edge(source=w_a, target=w_b, title=f"Shared Primes: {shared_factors}", width=weight))
+            
+            progress.progress(1.0, text="Complete!")
 
             if not nodes:
                  st.info(f"No connections found sharing {min_weight} or more prime factors. Try lowering the edge weight slider.")
