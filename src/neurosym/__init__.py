@@ -3,6 +3,9 @@ Triadic Neurosymbolic Engine — Core Package
 
 Deterministic algebraic framework for neurosymbolic validation,
 semantic projection, and AI model auditing.
+
+Install: pip install neurosym
+Docs: https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine
 """
 
 from neurosym.encoder import (
