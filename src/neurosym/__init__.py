@@ -15,6 +15,8 @@ from neurosym.encoder import (
 )
 from neurosym.triadic import DiscreteValidator
 from neurosym.storage import PrimeIndexDB
+from neurosym.graph import ScalableGraphBuilder
+from neurosym.reports import ReportGenerator
 
 __all__ = [
     "BaseEncoder",
@@ -24,6 +26,8 @@ __all__ = [
     "DiscreteMapper",
     "DiscreteValidator",
     "PrimeIndexDB",
+    "ScalableGraphBuilder",
+    "ReportGenerator",
     "create_encoder",
 ]
 

@@ -21,6 +21,8 @@ import networkx as nx
 from neurosym.encoder import ContinuousEncoder, DiscreteMapper
 from neurosym.triadic import DiscreteValidator
 from neurosym.storage import PrimeIndexDB
+from neurosym.graph import ScalableGraphBuilder
+from neurosym.reports import ReportGenerator
 from api.models import (
     EncodeRequest, EncodeResponse, ConceptPrime,
     AuditRequest, AuditResponse, AuditDiscrepancy,
@@ -38,6 +40,7 @@ async def lifespan(app: FastAPI):
     engine["encoder"] = ContinuousEncoder("all-MiniLM-L6-v2")
     engine["validator"] = DiscreteValidator()
     engine["db"] = PrimeIndexDB()
+    engine["graph_builder"] = ScalableGraphBuilder()
     engine["prime_map"] = {}
     engine["model_name"] = "all-MiniLM-L6-v2"
     yield
@@ -80,6 +83,9 @@ async def encode_concepts(req: EncodeRequest):
     
     # Update global state
     engine["prime_map"].update(prime_map)
+    
+    # Rebuild the scalable graph index
+    engine["graph_builder"].build_index(engine["prime_map"])
     
     # Persist if requested
     if req.persist:
@@ -126,19 +132,22 @@ async def audit_models(req: AuditRequest):
     primes_a = mapper_a.fit_transform(req.concepts, emb_a)
     primes_b = mapper_b.fit_transform(req.concepts, emb_b)
     
-    # Build graphs
+    # Build graphs using ScalableGraphBuilder
+    gb_a = ScalableGraphBuilder()
+    gb_b = ScalableGraphBuilder()
+    edges_a = gb_a.find_edges(primes_a)
+    edges_b = gb_b.find_edges(primes_b)
+    
+    # Build NetworkX graphs from the edges
     graph_a = nx.Graph()
     graph_b = nx.Graph()
     graph_a.add_nodes_from(req.concepts)
     graph_b.add_nodes_from(req.concepts)
     
-    for i in range(len(req.concepts)):
-        for j in range(i + 1, len(req.concepts)):
-            w1, w2 = req.concepts[i], req.concepts[j]
-            if math.gcd(primes_a[w1], primes_a[w2]) > 1:
-                graph_a.add_edge(w1, w2)
-            if math.gcd(primes_b[w1], primes_b[w2]) > 1:
-                graph_b.add_edge(w1, w2)
+    for a, b, w, _ in edges_a:
+        graph_a.add_edge(a, b)
+    for a, b, w, _ in edges_b:
+        graph_b.add_edge(a, b)
     
     # Precompute shortest paths
     paths_a = dict(nx.all_pairs_shortest_path_length(graph_a))
@@ -225,3 +234,45 @@ async def search_concepts(req: SearchRequest):
         total_indexed=len(prime_map),
         results=results,
     )
+
+
+from fastapi.responses import HTMLResponse, PlainTextResponse
+
+
+@app.get("/report", tags=["Reports"])
+async def generate_report(format: str = "html"):
+    """
+    Generate an exportable report of the current engine state.
+    
+    Supported formats: html, json, csv
+    """
+    prime_map = engine.get("prime_map", {})
+    if not prime_map:
+        raise HTTPException(status_code=400, detail="No concepts loaded. Call /encode first.")
+    
+    val = engine["validator"]
+    gb = engine["graph_builder"]
+    
+    report = ReportGenerator()
+    
+    # Add encoding section
+    report.add_encoding_section(
+        prime_map=prime_map,
+        model=engine.get("model_name", "unknown"),
+        lsh_bits=8,
+        factorize_fn=val._prime_factors,
+    )
+    
+    # Add graph section
+    edges = gb.find_edges(prime_map, min_shared=1)
+    report.add_graph_section(edges, node_count=len(prime_map))
+    
+    if format == "html":
+        return HTMLResponse(content=report.to_html())
+    elif format == "json":
+        return PlainTextResponse(content=report.to_json(), media_type="application/json")
+    elif format == "csv":
+        return PlainTextResponse(content=report.to_csv(), media_type="text/csv")
+    else:
+        raise HTTPException(status_code=400, detail=f"Unsupported format: {format}. Use html, json, or csv.")
+
