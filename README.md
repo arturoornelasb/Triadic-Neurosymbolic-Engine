@@ -64,3 +64,9 @@ To reproduce the $O(1)$ vs Cosine Similarity benchmarks from the scientific pape
 python scripts/run_experiments.py
 ```
 *Note: This generates LaTeX ready `tables/` for inclusion in the formal paper.*
+
+## ⚖️ License
+
+This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0). To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+
+Copyright (c) 2025 José Arturo Ornelas Brand
