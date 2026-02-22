@@ -1,0 +1,15 @@
+\begin{table}[h]
+\centering
+\caption{Computational efficiency: Cosine similarity vs.\ Prime GCD for pairwise relationship verification (50000 operations).}
+\label{tab:timing}
+\begin{tabular}{lccc}
+\toprule
+Method & Time (s) & Ops/sec & Output Type \\
+\midrule
+Cosine Similarity & 0.2048 & 244,083 & Probabilistic \\
+Prime GCD (ours) & 0.0072 & 6,942,345 & Deterministic \\
+\midrule
+\textbf{Speedup} & \multicolumn{3}{c}{\textbf{28.4$\times$}} \\
+\bottomrule
+\end{tabular}
+\end{table}

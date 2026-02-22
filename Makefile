@@ -2,7 +2,7 @@
 
 .PHONY: all experiments paper clean
 
-PAPER_DIR = ../prime-factorization-neurosymbolic-paper
+PAPER_DIR = ./paper
 PYTHON = $(PAPER_DIR)/.venv/bin/python
 SRC_DIR = $(PAPER_DIR)/src
 

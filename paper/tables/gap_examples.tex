@@ -1,0 +1,17 @@
+\begin{table*}[t]
+\centering
+\caption{Worked examples of abductive gap analysis. Each row decomposes the relationship between two concepts into shared backbone (GCD), unique factors, and subsumption status. $k=8$, seed $=42$.}
+\label{tab:gap}
+\begin{tabular}{llrrlrrlcc}
+\toprule
+Word A & Word B & $\Phi(A)$ & $\Phi(B)$ & Shared (GCD) & Only A & Only B & $A \supseteq B$ & $B \supseteq A$ \\
+\midrule
+King & Queen & 3230 & 1615 & 1615 [5, 17, 19] & 2 [2] & 1 [] & \checkmark & $\times$ \\
+King & Man & 3230 & 85085 & 85 [5, 17] & 38 [2, 19] & 1001 [7, 11, 13] & $\times$ & $\times$ \\
+Man & Woman & 85085 & 1105 & 1105 [5, 13, 17] & 77 [7, 11] & 1 [] & \checkmark & $\times$ \\
+Dog & Cat & 19019 & 6783 & 133 [7, 19] & 143 [11, 13] & 51 [3, 17] & $\times$ & $\times$ \\
+Car & Bicycle & 595 & 124355 & 595 [5, 7, 17] & 1 [] & 209 [11, 19] & $\times$ & \checkmark \\
+Love & Hate & 7735 & 1105 & 1105 [5, 13, 17] & 7 [7] & 1 [] & \checkmark & $\times$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
