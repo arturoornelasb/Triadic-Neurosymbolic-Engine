@@ -1,71 +1,126 @@
-# Triadic Neurosymbolic Engine (`neurosym`)
+# Triadic Neurosymbolic Engine
 
-[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/) [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/release/python-3100/) [![Jupyter Notebook](https://img.shields.io/badge/jupyter-%23FA0F00.svg?style=flat&logo=jupyter&logoColor=white)](https://jupyter.org/) [![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=Streamlit&logoColor=white)](https://streamlit.io/)
+[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![CI](https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine/actions/workflows/ci.yml/badge.svg)](https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine/actions)
 
-A Deterministic Algebraic Framework for Neurosymbolic Validation, Semantic Projection, and AI Model Auditing.
+**A deterministic algebraic framework for neurosymbolic validation, semantic projection, and AI model auditing.**
 
-This library presents an approach to shift from probabilistic floating-point similarities to deterministic, discrete mathematics. By projecting continuous vector embeddings into $O(1)$ integer prime factor spaces via Locality Sensitive Hashing (LSH), it enables formal structural analysis, set operations, and exact interpretability of Large Language Models and embedding spaces.
+Cosine similarity tells you *"King and Queen are 0.87 similar"* — a black-box number.
 
-## Key Feature: Topological Semantic Auditing
+The Triadic Engine tells you *"King = 2×3×5 and Queen = 2×5×7. They share {2,5} (Royalty). King has {3} (Male) that Queen lacks. Queen has {7} (Female) that King lacks."* — fully transparent, deterministic decomposition.
 
-With the `Triadic AI Auditor`, we introduce a method to compute exact structural differences between opaque neural representations using **Topological Shortest-Path differencing**.
+---
 
-Instead of comparing vectors via cosine similarity alone, the Triadic Engine maps models (e.g., `all-MiniLM` vs `paraphrase-MiniLM`) onto discrete deterministic graphs. It calculates the exact Chains of Thought (shortest paths via `NetworkX`) connecting defined concepts. 
-
-**This allows researchers and developers to:**
-- Identify when an embedding model fails to capture structural transitive links between key concepts.
-- Quantify cognitive distortions mathematically using $O(1)$ integer divisibility, providing an exact alternative to probabilistic dimensionality reduction techniques like T-SNE.
-
-## 📦 Core Architecture (`src/neurosym`)
-
-The engine is composed of interdependent modules designed to bridge continuous latent semantic spaces and rigorous discrete logic:
-
-1. **`neurosym.encoder` (Continuous to Discrete Projection)** 
-   Extracts embeddings from PyTorch sentence-transformers and hashes them through Locality-Sensitive Hashing hyperplanes, discretizing them into composite prime integers.
-   
-2. **`neurosym.triadic` (Algebraic Validation Module)**
-   Evaluates concept relationships using elementary modular arithmetic (e.g., `math.gcd`). Discovers structural subsumptions and conducts abductive gap analysis.
-   
-3. **`neurosym.ingest` (Database Ingestion)**
-   Hooks the mathematical engine into standard Postgres SQL databases and SQLite datalakes for at-scale processing.
-   
-4. **`neurosym.anomaly` (Symbolic Anomaly Detection)**
-   Executes deterministic semantic gap analysis to detect structural transitive violations in embeddings.
-
-## 🖥️ Interactive Web Dashboard
-
-To run the interactive graph and Triadic Auditor UI:
+## Quickstart
 
 ```bash
+# Install
 pip install -e .
+
+# Python API
+from neurosym import ContinuousEncoder, DiscreteMapper, DiscreteValidator
+
+encoder = ContinuousEncoder("all-MiniLM-L6-v2")
+mapper = DiscreteMapper(n_bits=8, seed=42)
+
+embeddings = encoder.encode(["King", "Queen", "Man", "Woman"])
+prime_map = mapper.fit_transform(["King", "Queen", "Man", "Woman"], embeddings)
+
+validator = DiscreteValidator()
+print(validator.validate_relationship(prime_map["King"], prime_map["Queen"], prime_map["Man"]))
+```
+
+## How It Works
+
+```
+Text → Neural Embedding → LSH Hyperplanes → Composite Prime Integer
+         (R^384)            (k projections)      (Φ(x) = ∏ pᵢ)
+```
+
+Each concept becomes a single integer whose **prime factors are its semantic features**. This enables three operations **impossible** under cosine similarity:
+
+| Operation | Math | What it answers |
+|-----------|------|----------------|
+| **Subsumption** | `Φ(A) mod Φ(B) == 0` | "Does A contain every feature of B?" |
+| **Composition** | `lcm(Φ(A), Φ(B))` | "What concept has all features of both A and B?" |
+| **Gap Analysis** | `gcd(Φ(A), Φ(B))` + quotients | "Which features do they share? Which are unique?" |
+
+## Core Modules
+
+| Module | Description |
+|--------|-------------|
+| `neurosym.encoder` | Multi-backend embedding encoder (HuggingFace, OpenAI, Cohere) + LSH→Prime projection |
+| `neurosym.triadic` | Algebraic validation: subsumption, composition, abductive gap analysis |
+| `neurosym.graph` | Scalable graph builder with inverted prime index (avoids O(N²)) |
+| `neurosym.storage` | SQLite persistence for prime indices and audit results |
+| `neurosym.reports` | Exportable reports in HTML, JSON, and CSV formats |
+| `neurosym.ingest` | Database ingestion pipeline with batch processing |
+| `neurosym.anomaly` | Multiplicative anomaly detection for tabular data |
+
+## Interactive Dashboard
+
+```bash
 streamlit run app.py
 ```
 
-Provides four modules:
-1. **Ingestion & Encoding:** Upload CSV dictionaries.
-2. **Holographic Graph:** Physical force-directed semantic graphs via `streamlit-agraph`.
-3. **Logic & Search:** Exact arithmetic abduction and subsumption queries.
-4. **AI Auditor:** The model-vs-model relational differencing tool.
+Five tabs: **Ingestion**, **Semantic Graph**, **Logic & Search**, **AI Auditor**, **Benchmarks**
 
-## 🛠️ CLI Tools & Auditing
+The AI Auditor compares how different embedding models structure the same concepts using topological shortest-path differencing — finding exact structural discrepancies between models.
 
-### Massive Topological AI Auditor
-To audit large databases (e.g., WordNet vocabulary) and generate a CSV diff report:
+## CLI Tools
 
 ```bash
-python scripts/triadic_auditor.py --input examples/data/wordnet_2k.csv --output reports/wordnet_2k_topological_audit.csv
-```
+# Massive topological audit (model vs model)
+python scripts/triadic_auditor.py --input examples/data/wordnet_2k.csv --output reports/audit.csv
 
-### Academic Experiments Generator
-To reproduce the $O(1)$ vs Cosine Similarity benchmarks presented in the scientific paper:
-
-```bash
+# Reproduce paper benchmarks
 python scripts/run_experiments.py
 ```
-*Note: This generates LaTeX-ready `tables/` for automated inclusion in the formal paper.*
 
-## ⚖️ License
+## Benchmarks
 
-This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0). To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+- **28.4× faster** pairwise verification than cosine similarity (50K operations)
+- **100% composition guarantee** verified across 5,671 word pairs
+- **108,694 discrepancies** found auditing 2M semantic chains across 2 models
 
-Copyright (c) 2025 José Arturo Ornelas Brand
+## Academic Paper
+
+The full paper with 8 experiments is in [`paper/`](paper/), compilable with:
+
+```bash
+cd paper && pdflatex -output-directory=. src/main.tex
+```
+
+## Citation
+
+```bibtex
+@software{ornelas2026triadic,
+  author       = {Ornelas Brand, J. Arturo},
+  title        = {Triadic Neurosymbolic Engine: Prime Factorization as a
+                  Neurosymbolic Bridge for Deterministic Verification},
+  year         = 2026,
+  url          = {https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine}
+}
+```
+
+## Project Structure
+
+```
+├── src/neurosym/          ← Core Python package (pip installable)
+├── paper/                 ← Academic paper (LaTeX)
+├── app.py                 ← Streamlit interactive dashboard
+├── notebooks/             ← Reproducibility demos (Jupyter)
+├── scripts/               ← CLI auditing & benchmark tools
+├── tests/                 ← Test suite
+├── examples/              ← Usage examples & sample data
+└── pyproject.toml         ← Package metadata & dependencies
+```
+
+## License
+
+Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+
+You may share and adapt this work for non-commercial purposes with attribution. For commercial licensing inquiries, contact: arturoornelas62@gmail.com
+
+© 2026 José Arturo Ornelas Brand

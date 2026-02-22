@@ -1,0 +1,20 @@
+Concept,Consensus,Shared_Factors_GCD,Extra_Factors_all-MiniLM-L6-v2,Extra_Factors_paraphrase-MiniLM-L3-v2
+Liberty,False,"[3, 7, 11, 13, 17, 19]","[2, 5]",[]
+Sad,False,"[3, 5, 17, 19]",[7],[13]
+Happy,False,"[3, 5, 13, 19]",[7],[2]
+Air,False,"[3, 5, 11]",[],"[2, 19]"
+Earth,False,"[17, 19]","[2, 3]","[11, 13]"
+Water,False,"[2, 3]",[5],"[11, 13]"
+Fire,False,"[2, 3]",[7],"[5, 11, 13, 17]"
+Assistant,False,"[3, 11, 13, 19]",[5],[2]
+Angry,False,"[2, 3, 13, 17, 19]",[7],[]
+CEO,False,"[3, 5, 19]",[11],"[2, 13, 17]"
+Doctor,False,"[2, 3, 5, 11, 13]","[17, 19]",[]
+Nurse,False,"[2, 3, 5]","[7, 13, 19]",[11]
+Engineer,False,"[3, 5, 17]",[],"[2, 11, 19]"
+Democracy,False,"[11, 17]","[3, 5, 7]",[19]
+Equality,False,"[5, 7, 11, 17]","[3, 19]","[2, 13]"
+Justice,False,"[2, 3, 11, 17]",[19],"[5, 7]"
+Freedom,False,"[3, 17]","[2, 7, 19]",[11]
+Teacher,False,"[2, 3, 5, 7, 11, 17, 19]",[13],[]
+Fear,False,"[2, 3, 7, 13, 17, 19]",[5],[11]

@@ -3,4 +3,15 @@ venv/
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
-*.csv
+*.egg-info/
+dist/
+build/
+*.db
+*.sqlite
+.env
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.bbl
+paper/*.blg
+paper/*.pdf

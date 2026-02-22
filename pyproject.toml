@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "CC-BY-NC-4.0" }
 authors = [
-    { name = "José Arturo Ornelas Brand" }
+    { name = "José Arturo Ornelas Brand", email = "arturoornelas62@gmail.com" }
 ]
 dependencies = [
     "numpy>=1.20",
