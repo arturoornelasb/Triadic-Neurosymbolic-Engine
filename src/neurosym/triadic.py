@@ -59,6 +59,15 @@ class DiscreteValidator:
         Returns:
             ValidationResult containing the expected target (C4) or the missing abductive factor.
         """
+        # Guard against zero inputs
+        if source == 0 or transform1 == 0 or transform2 == 0:
+            return ValidationResult(
+                is_valid=False,
+                output_value=0,
+                simplicity_k=0.0,
+                trace="Zero input detected — cannot validate."
+            )
+        
         # 1. GCD Normalization (Projection to Terminal Object)
         gcd_in = math.gcd(source, math.gcd(transform1, transform2))
         c1_p = source // gcd_in
@@ -154,6 +163,12 @@ class DiscreteValidator:
         result = concepts[0]
         for c in concepts[1:]:
             result = (result * c) // math.gcd(result, c)  # LCM
+            # Guard against astronomically large composites
+            if result.bit_length() > 4096:
+                raise OverflowError(
+                    f"Compose result exceeds 4096 bits ({result.bit_length()} bits). "
+                    f"Reduce the number of concepts or LSH bits."
+                )
         return result
 
     @staticmethod

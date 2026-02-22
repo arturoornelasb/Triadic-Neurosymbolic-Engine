@@ -7,6 +7,7 @@ No external dependencies — uses Python stdlib only.
 import json
 import csv
 import io
+import html as html_mod
 from datetime import datetime
 from typing import Dict, List, Optional
 
@@ -121,9 +122,10 @@ class ReportGenerator:
                 rows_html = ""
                 for row in section["rows"]:
                     factors_str = ", ".join(str(f) for f in row["decomposition"])
+                    safe_concept = html_mod.escape(str(row['concept']))
                     rows_html += f"""
                     <tr>
-                        <td>{row['concept']}</td>
+                        <td>{safe_concept}</td>
                         <td class="mono">{row['prime_factor']}</td>
                         <td class="mono">[{factors_str}]</td>
                     </tr>"""
@@ -146,13 +148,16 @@ class ReportGenerator:
             elif section["type"] == "audit":
                 rows_html = ""
                 for row in section["rows"]:
+                    safe_a = html_mod.escape(str(row.get('concept_a', '')))
+                    safe_b = html_mod.escape(str(row.get('concept_b', '')))
+                    safe_chain = html_mod.escape(str(row.get('chain', '')))
                     rows_html += f"""
                     <tr>
-                        <td>{row.get('concept_a', '')}</td>
-                        <td>{row.get('concept_b', '')}</td>
-                        <td class="mono">{row.get('distance_model_a', '')}</td>
-                        <td class="mono">{row.get('distance_model_b', '')}</td>
-                        <td>{row.get('chain', '')}</td>
+                        <td>{safe_a}</td>
+                        <td>{safe_b}</td>
+                        <td class="mono">{html_mod.escape(str(row.get('distance_model_a', '')))}</td>
+                        <td class="mono">{html_mod.escape(str(row.get('distance_model_b', '')))}</td>
+                        <td>{safe_chain}</td>
                     </tr>"""
                 
                 badge_class = "badge-ok" if section['discrepancies_found'] == 0 else "badge-warn"
@@ -174,10 +179,12 @@ class ReportGenerator:
             elif section["type"] == "graph":
                 conn_html = ""
                 for c in section.get("top_connections", []):
+                    safe_a = html_mod.escape(str(c['concept_a']))
+                    safe_b = html_mod.escape(str(c['concept_b']))
                     conn_html += f"""
                     <tr>
-                        <td>{c['concept_a']}</td>
-                        <td>{c['concept_b']}</td>
+                        <td>{safe_a}</td>
+                        <td>{safe_b}</td>
                         <td class="mono">{c['weight']}</td>
                         <td class="mono">{c['shared_primes']}</td>
                     </tr>"""

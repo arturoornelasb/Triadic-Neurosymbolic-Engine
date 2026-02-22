@@ -15,8 +15,19 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import networkx as nx
+
+# Security: only allow pre-approved embedding models
+ALLOWED_MODELS = {
+    "all-MiniLM-L6-v2",
+    "all-MiniLM-L12-v2",
+    "paraphrase-MiniLM-L3-v2",
+    "paraphrase-MiniLM-L6-v2",
+    "all-mpnet-base-v2",
+    "multi-qa-MiniLM-L6-cos-v1",
+}
 
 from neurosym.encoder import ContinuousEncoder, DiscreteMapper
 from neurosym.triadic import DiscreteValidator
@@ -53,6 +64,15 @@ app = FastAPI(
     version="0.1.0",
     license_info={"name": "CC BY-NC 4.0", "url": "https://creativecommons.org/licenses/by-nc/4.0/"},
     lifespan=lifespan,
+)
+
+# Security: CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Restrict in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
@@ -117,6 +137,12 @@ async def audit_models(req: AuditRequest):
     """
     if req.model_a == req.model_b:
         raise HTTPException(status_code=400, detail="model_a and model_b must be different.")
+    
+    if req.model_a not in ALLOWED_MODELS or req.model_b not in ALLOWED_MODELS:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Model not allowed. Permitted models: {sorted(ALLOWED_MODELS)}"
+        )
     
     # Load both models
     enc_a = ContinuousEncoder(req.model_a)
