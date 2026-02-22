@@ -1,5 +1,7 @@
 # Triadic Neurosymbolic Engine (`neurosym`)
 
+[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/) [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/release/python-3100/) [![Jupyter Notebook](https://img.shields.io/badge/jupyter-%23FA0F00.svg?style=flat&logo=jupyter&logoColor=white)](https://jupyter.org/) [![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=Streamlit&logoColor=white)](https://streamlit.io/)
+
 A Deterministic Algebraic Framework for Neurosymbolic Validation, Semantic Projection, and AI Model Auditing.
 
 This library presents an approach to shift from probabilistic floating-point similarities to deterministic, discrete mathematics. By projecting continuous vector embeddings into $O(1)$ integer prime factor spaces via Locality Sensitive Hashing (LSH), it enables formal structural analysis, set operations, and exact interpretability of Large Language Models and embedding spaces.
