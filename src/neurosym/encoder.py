@@ -1,28 +1,153 @@
 import numpy as np
-from typing import List, Dict
+from typing import List, Dict, Optional
 import sympy
 import logging
-from sentence_transformers import SentenceTransformer
+from abc import ABC, abstractmethod
 
 logger = logging.getLogger(__name__)
 
-class ContinuousEncoder:
+
+# ============================================================
+# Abstract Encoder Interface (Pluggable Backend)
+# ============================================================
+
+class BaseEncoder(ABC):
+    """
+    Abstract interface for all embedding backends.
+    Subclass this to add new providers (OpenAI, Cohere, etc.)
+    """
+    
+    @abstractmethod
+    def encode(self, concepts: List[str]) -> np.ndarray:
+        """Returns a 2D numpy array of shape (len(concepts), dim)."""
+        ...
+    
+    @property
+    @abstractmethod
+    def name(self) -> str:
+        """Human-readable model identifier."""
+        ...
+
+
+# ============================================================
+# Local HuggingFace / Sentence-Transformers Backend
+# ============================================================
+
+class ContinuousEncoder(BaseEncoder):
     """
     A lightweight wrapper around sentence-transformers to generate 
     continuous vector embeddings for natural language concepts.
-    Optimized for CPU usage.
+    Optimized for CPU usage. Runs entirely offline.
     """
     def __init__(self, model_name: str = 'all-MiniLM-L6-v2'):
         logger.info(f"Loading local embedding model: {model_name}")
+        from sentence_transformers import SentenceTransformer
         self.model = SentenceTransformer(model_name)
+        self._name = model_name
         
     def encode(self, concepts: List[str]) -> np.ndarray:
-        """
-        Generates dense vector embeddings for a list of concepts.
-        """
-        logger.info(f"Encoding {len(concepts)} concepts...")
-        embeddings = self.model.encode(concepts, convert_to_numpy=True)
-        return embeddings
+        logger.info(f"Encoding {len(concepts)} concepts with {self._name}...")
+        return self.model.encode(concepts, convert_to_numpy=True)
+    
+    @property
+    def name(self) -> str:
+        return self._name
+
+
+# ============================================================
+# OpenAI Embedding Backend (Requires API Key)
+# ============================================================
+
+class OpenAIEncoder(BaseEncoder):
+    """
+    Embedding backend using OpenAI's text-embedding API.
+    Requires: pip install openai
+    Set OPENAI_API_KEY environment variable.
+    """
+    def __init__(self, model_name: str = "text-embedding-3-small"):
+        self._name = model_name
+        import os
+        try:
+            from openai import OpenAI
+            self.client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+        except ImportError:
+            raise ImportError("OpenAI backend requires: pip install openai")
+        
+    def encode(self, concepts: List[str]) -> np.ndarray:
+        logger.info(f"Encoding {len(concepts)} concepts with OpenAI/{self._name}...")
+        response = self.client.embeddings.create(input=concepts, model=self._name)
+        embeddings = [item.embedding for item in response.data]
+        return np.array(embeddings, dtype=np.float32)
+    
+    @property
+    def name(self) -> str:
+        return f"openai/{self._name}"
+
+
+# ============================================================
+# Cohere Embedding Backend (Requires API Key)
+# ============================================================
+
+class CohereEncoder(BaseEncoder):
+    """
+    Embedding backend using Cohere's embed API.
+    Requires: pip install cohere
+    Set COHERE_API_KEY environment variable.
+    """
+    def __init__(self, model_name: str = "embed-english-v3.0"):
+        self._name = model_name
+        import os
+        try:
+            import cohere
+            self.client = cohere.Client(api_key=os.environ.get("COHERE_API_KEY"))
+        except ImportError:
+            raise ImportError("Cohere backend requires: pip install cohere")
+    
+    def encode(self, concepts: List[str]) -> np.ndarray:
+        logger.info(f"Encoding {len(concepts)} concepts with Cohere/{self._name}...")
+        response = self.client.embed(
+            texts=concepts,
+            model=self._name,
+            input_type="search_document"
+        )
+        return np.array(response.embeddings, dtype=np.float32)
+    
+    @property
+    def name(self) -> str:
+        return f"cohere/{self._name}"
+
+
+# ============================================================
+# Encoder Factory
+# ============================================================
+
+ENCODER_REGISTRY = {
+    "local": ContinuousEncoder,
+    "openai": OpenAIEncoder,
+    "cohere": CohereEncoder,
+}
+
+def create_encoder(provider: str = "local", model: str = None) -> BaseEncoder:
+    """
+    Factory function to create an encoder from a provider name.
+    
+    Examples:
+        create_encoder("local", "all-MiniLM-L6-v2")
+        create_encoder("openai", "text-embedding-3-large")
+        create_encoder("cohere", "embed-english-v3.0")
+    """
+    if provider not in ENCODER_REGISTRY:
+        raise ValueError(f"Unknown provider '{provider}'. Available: {list(ENCODER_REGISTRY.keys())}")
+    
+    cls = ENCODER_REGISTRY[provider]
+    if model:
+        return cls(model_name=model)
+    return cls()
+
+
+# ============================================================
+# Discrete Mapper (LSH → Prime Factorization)
+# ============================================================
 
 class DiscreteMapper:
     """
