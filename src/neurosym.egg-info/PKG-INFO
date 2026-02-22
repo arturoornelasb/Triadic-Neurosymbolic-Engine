@@ -12,6 +12,8 @@ Requires-Dist: networkx>=2.5
 Requires-Dist: scikit-learn>=1.0
 Requires-Dist: sentence-transformers>=2.2
 Requires-Dist: sympy>=1.12
+Requires-Dist: streamlit>=1.31.0
+Requires-Dist: pandas>=2.0.0
 Provides-Extra: dev
 Requires-Dist: pytest>=7.0; extra == "dev"
 Requires-Dist: black>=22.0; extra == "dev"
@@ -19,64 +21,70 @@ Requires-Dist: flake8>=4.0; extra == "dev"
 
 # Triadic Neurosymbolic Engine (`neurosym`)
 
-A Deterministic Algebraic Framework for Neurosymbolic Validation and Semantic Projection.
+A Deterministic Algebraic Framework for Neurosymbolic Validation, Semantic Projection, and AI Model Auditing.
 
-This library unifies five experimental theories into a single, cohesive computational architecture designed for **Mechanistic Interpretability**, **Knowledge Graph Regularization**, and **Neurosymbolic AI**. 
+This library presents an approach to shift from probabilistic floating-point similarities to deterministic, discrete mathematics. By projecting continuous vector embeddings into $O(1)$ integer prime factor spaces via Locality Sensitive Hashing (LSH), it enables formal structural analysis, set operations, and exact interpretability of Large Language Models and embedding spaces.
 
-It shifts the paradigm from probabilistic floating-point "black boxes" to deterministic, discrete mathematics using modular arithmetic, homological type theory invariants, and entropic graph theory.
+## Key Feature: Topological Semantic Auditing
 
-## Core Modules
+With the `Triadic AI Auditor`, we introduce a method to compute exact structural differences between opaque neural representations using **Topological Shortest-Path differencing**.
 
-The engine is composed of three interconnected modules designed to bridge the gap between continuous latent semantic spaces and rigorous discrete logic:
+Instead of comparing vectors via cosine similarity alone, the Triadic Engine maps models (e.g., `all-MiniLM` vs `paraphrase-MiniLM`) onto discrete deterministic graphs. It calculates the exact Chains of Thought (shortest paths via `NetworkX`) connecting defined concepts. 
 
-1. **`neurosym.buss` (Latent Extraction Module):** 
-   *Contrastive Latent Projections.* Extracts orthogonal sentiment/semantic axes from natural language corpora using techniques like Singular Value Decomposition (SVD), preparing continuous data for discrete projection.
+**This allows researchers and developers to:**
+- Identify when an embedding model fails to capture structural transitive links between key concepts.
+- Quantify cognitive distortions mathematically using $O(1)$ integer divisibility, providing an exact alternative to probabilistic dimensionality reduction techniques like T-SNE.
+
+## 📦 Core Architecture (`src/neurosym`)
+
+The engine is composed of interdependent modules designed to bridge continuous latent semantic spaces and rigorous discrete logic:
+
+1. **`neurosym.encoder` (Continuous to Discrete Projection)** 
+   Extracts embeddings from PyTorch sentence-transformers and hashes them through Locality-Sensitive Hashing hyperplanes, discretizing them into composite prime integers.
    
-2. **`neurosym.triadic` (Discrete Validation Module):**
-   *Abductive Algebraic Resolver.* Projects continuous data into a domain of integers (factors/primes). Evaluates relationships using Homotopy Type Theory invariants and elementary modular arithmetic (`math.gcd`). Discovers "hidden variables" or structurally missing factors through topological obstruction detection.
+2. **`neurosym.triadic` (Algebraic Validation Module)**
+   Evaluates concept relationships using elementary modular arithmetic (e.g., `math.gcd`). Discovers structural subsumptions and conducts abductive gap analysis.
    
-3. **`neurosym.uhrt` (Graph Regularization Module):**
-   *Entropic Graph Pruning.* A heuristic regularizer for network topologies (like Knowledge Graphs) that monitors arithmetic stability. If relationships mathematically break down (a "glitch"), it performs entropic pruning to maximize info-theoretic stability.
+3. **`neurosym.ingest` (Database Ingestion)**
+   Hooks the mathematical engine into standard Postgres SQL databases and SQLite datalakes for at-scale processing.
+   
+4. **`neurosym.anomaly` (Symbolic Anomaly Detection)**
+   Executes deterministic semantic gap analysis to detect structural transitive violations in embeddings.
 
-## Installation
+## 🖥️ Interactive Web Dashboard
 
-Requires Python 3.9+
+To run the interactive graph and Triadic Auditor UI:
 
 ```bash
-git clone https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine.git
-cd Triadic-Neurosymbolic-Engine
 pip install -e .
+streamlit run app.py
 ```
 
-## Quick Start (Conceptual Pipeline)
+Provides four modules:
+1. **Ingestion & Encoding:** Upload CSV dictionaries.
+2. **Holographic Graph:** Physical force-directed semantic graphs via `streamlit-agraph`.
+3. **Logic & Search:** Exact arithmetic abduction and subsumption queries.
+4. **AI Auditor:** The model-vs-model relational differencing tool.
 
-```python
-import neurosym
+## 🛠️ CLI Tools & Auditing
 
-# 1. Extract Latent Features from Text
-encoder = neurosym.buss.BipolarExtractor(corpus_path="data.txt")
-axes = encoder.extract_axes()
+### Massive Topological AI Auditor
+To audit large databases (e.g., WordNet vocabulary) and generate a CSV diff report:
 
-# 2. Project to Discrete Triads and Validate 
-validator = neurosym.triadic.TriadicValidator()
-# Validate if A (Input) -> B (Transformation) yields C (Target) under invariant Rule a/b
-result = validator.solve_triad(C1=A, C2=B, C3=C, rule_a=3, rule_b=4)
-
-if result.is_hypothetical:
-    print(f"Abductive Discovery: Missing integer factor identified: {result.missing_factor}")
-
-# 3. Regularize Network if unstable
-graph = neurosym.uhrt.KnowledgeGraph(nodes=...)
-if result.is_hypothetical:
-    graph = neurosym.uhrt.entropic_pruning(graph, target_entropy=2.0)
+```bash
+python scripts/triadic_auditor.py --input examples/data/wordnet_2k.csv --output reports/wordnet_2k_topological_audit.csv
 ```
 
-## Abstract and Theoretical Background
-This project represents the practical software implementation of the following theoretical papers:
-- *Deterministic Semantic Resonance*
-- *Empirical Validation of the Bipolar Universal Semantic Scale (BUSS)*
-- *From GCD to Cubical Triads (Shadow Engine)*
-- *A Rigorous Triadic Framework for Neurosymbolic Reasoning*
-- *Unified Holographic Resonance Theory (UHRT)*
+### Academic Experiments Generator
+To reproduce the $O(1)$ vs Cosine Similarity benchmarks presented in the scientific paper:
 
-*Note: All cosmological and physics-based analogies present in the original preprint literature have been formally deprecated in favor of this strict computational implementation.*
+```bash
+python scripts/run_experiments.py
+```
+*Note: This generates LaTeX-ready `tables/` for automated inclusion in the formal paper.*
+
+## ⚖️ License
+
+This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0). To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
+
+Copyright (c) 2025 José Arturo Ornelas Brand

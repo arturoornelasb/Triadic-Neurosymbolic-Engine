@@ -81,7 +81,7 @@ if not st.session_state.prime_map:
     recompute_mapping()
 
 st.title("Triadic Neurosymbolic Engine")
-st.subheader("Deterministic LLM Interpretabilty & Verification")
+st.subheader("Deterministic LLM Interpretability & Verification")
 st.markdown("Convert opaque continuous $R^n$ embeddings into transparent, arithmetic Prime Factor integers $Z$ for $O(1)$ logical verification.")
 
 # The unified flow
@@ -250,7 +250,8 @@ with tab3:
                 if search_query:
                     # Quick encode the query
                     q_emb = encoder.encode([search_query])
-                    q_prime = st.session_state.mapper.transform([search_query], q_emb)[search_query]
+                    q_map = st.session_state.mapper.fit_transform([search_query], q_emb)
+                    q_prime = q_map[search_query]
                     q_factors = set(validator._prime_factors(q_prime))
                     
                     st.write(f"Query Prime ID: `{q_prime}` {list(q_factors)}")

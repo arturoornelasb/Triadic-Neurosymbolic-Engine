@@ -32,4 +32,5 @@ def test_database_ingestion():
         for i, (record_id, text, distance, prime) in enumerate(results):
             print(f"  {i+1}. Result: '{text}' (Distance: {distance}, Prime: {prime})")
 
-test_database_ingestion()
+if __name__ == "__main__":
+    test_database_ingestion()

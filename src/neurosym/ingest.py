@@ -27,18 +27,7 @@ class DatabaseIngestor:
         """Returns the list of unique prime factors of n."""
         if n <= 1:
             return []
-        factors = []
-        d = 2
-        temp = n
-        while d * d <= temp:
-            if temp % d == 0:
-                factors.append(d)
-                while temp % d == 0:
-                    temp //= d
-            d += 1
-        if temp > 1:
-            factors.append(temp)
-        return factors
+        return list(sympy.factorint(n).keys())
         
     def ingest_dataframe(self, df: pd.DataFrame, text_column: str, id_column: str = None) -> Dict:
         """
