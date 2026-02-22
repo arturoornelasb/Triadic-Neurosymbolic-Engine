@@ -1,0 +1,82 @@
+Metadata-Version: 2.4
+Name: neurosym
+Version: 0.1.0
+Summary: A Deterministic Algebraic Framework for Neurosymbolic Validation and Semantic Projection
+Author: José Arturo Ornelas Brand
+License: Apache-2.0
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: numpy>=1.20
+Requires-Dist: scipy>=1.7
+Requires-Dist: networkx>=2.5
+Requires-Dist: scikit-learn>=1.0
+Requires-Dist: sentence-transformers>=2.2
+Requires-Dist: sympy>=1.12
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+Requires-Dist: black>=22.0; extra == "dev"
+Requires-Dist: flake8>=4.0; extra == "dev"
+
+# Triadic Neurosymbolic Engine (`neurosym`)
+
+A Deterministic Algebraic Framework for Neurosymbolic Validation and Semantic Projection.
+
+This library unifies five experimental theories into a single, cohesive computational architecture designed for **Mechanistic Interpretability**, **Knowledge Graph Regularization**, and **Neurosymbolic AI**. 
+
+It shifts the paradigm from probabilistic floating-point "black boxes" to deterministic, discrete mathematics using modular arithmetic, homological type theory invariants, and entropic graph theory.
+
+## Core Modules
+
+The engine is composed of three interconnected modules designed to bridge the gap between continuous latent semantic spaces and rigorous discrete logic:
+
+1. **`neurosym.buss` (Latent Extraction Module):** 
+   *Contrastive Latent Projections.* Extracts orthogonal sentiment/semantic axes from natural language corpora using techniques like Singular Value Decomposition (SVD), preparing continuous data for discrete projection.
+   
+2. **`neurosym.triadic` (Discrete Validation Module):**
+   *Abductive Algebraic Resolver.* Projects continuous data into a domain of integers (factors/primes). Evaluates relationships using Homotopy Type Theory invariants and elementary modular arithmetic (`math.gcd`). Discovers "hidden variables" or structurally missing factors through topological obstruction detection.
+   
+3. **`neurosym.uhrt` (Graph Regularization Module):**
+   *Entropic Graph Pruning.* A heuristic regularizer for network topologies (like Knowledge Graphs) that monitors arithmetic stability. If relationships mathematically break down (a "glitch"), it performs entropic pruning to maximize info-theoretic stability.
+
+## Installation
+
+Requires Python 3.9+
+
+```bash
+git clone https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine.git
+cd Triadic-Neurosymbolic-Engine
+pip install -e .
+```
+
+## Quick Start (Conceptual Pipeline)
+
+```python
+import neurosym
+
+# 1. Extract Latent Features from Text
+encoder = neurosym.buss.BipolarExtractor(corpus_path="data.txt")
+axes = encoder.extract_axes()
+
+# 2. Project to Discrete Triads and Validate 
+validator = neurosym.triadic.TriadicValidator()
+# Validate if A (Input) -> B (Transformation) yields C (Target) under invariant Rule a/b
+result = validator.solve_triad(C1=A, C2=B, C3=C, rule_a=3, rule_b=4)
+
+if result.is_hypothetical:
+    print(f"Abductive Discovery: Missing integer factor identified: {result.missing_factor}")
+
+# 3. Regularize Network if unstable
+graph = neurosym.uhrt.KnowledgeGraph(nodes=...)
+if result.is_hypothetical:
+    graph = neurosym.uhrt.entropic_pruning(graph, target_entropy=2.0)
+```
+
+## Abstract and Theoretical Background
+This project represents the practical software implementation of the following theoretical papers:
+- *Deterministic Semantic Resonance*
+- *Empirical Validation of the Bipolar Universal Semantic Scale (BUSS)*
+- *From GCD to Cubical Triads (Shadow Engine)*
+- *A Rigorous Triadic Framework for Neurosymbolic Reasoning*
+- *Unified Holographic Resonance Theory (UHRT)*
+
+*Note: All cosmological and physics-based analogies present in the original preprint literature have been formally deprecated in favor of this strict computational implementation.*
