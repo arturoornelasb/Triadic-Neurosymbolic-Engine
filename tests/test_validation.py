@@ -1,8 +1,8 @@
 import numpy as np
 import networkx as nx
-from neurosym.legacy.buss import BipolarExtractor
+from neurosym._archived.buss import BipolarExtractor
 from neurosym.triadic import DiscreteValidator
-from neurosym.legacy.uhrt import GraphRegularizer
+from neurosym._archived.uhrt import GraphRegularizer
 import logging
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
