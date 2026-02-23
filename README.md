@@ -3,6 +3,7 @@
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![CI](https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine/actions/workflows/ci.yml/badge.svg)](https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine/actions)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18748671.svg)](https://doi.org/10.5281/zenodo.18748671)
 
 **A deterministic algebraic framework for neurosymbolic validation, semantic projection, and AI model auditing.**
 
