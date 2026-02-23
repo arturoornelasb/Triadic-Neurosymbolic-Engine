@@ -106,7 +106,12 @@ python scripts/benchmark_pca.py
 The full paper with 9 experiments is in [`paper/`](paper/), compilable with:
 
 ```bash
-cd paper && pdflatex -output-directory=. src/main.tex
+cd paper
+pdflatex -output-directory=. -jobname=PrimeFactorization_NeurosymbolicBridge_OrnelasBrand_2026 src/main.tex
+bibtex PrimeFactorization_NeurosymbolicBridge_OrnelasBrand_2026
+pdflatex -output-directory=. -jobname=PrimeFactorization_NeurosymbolicBridge_OrnelasBrand_2026 src/main.tex
+pdflatex -output-directory=. -jobname=PrimeFactorization_NeurosymbolicBridge_OrnelasBrand_2026 src/main.tex
+# Or simply run `make paper` from the root directory
 ```
 
 ## Citation

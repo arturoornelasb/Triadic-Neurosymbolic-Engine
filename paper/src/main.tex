@@ -41,7 +41,7 @@
 %  ABSTRACT
 % ============================================================
 \begin{abstract}
-We propose a method for bridging continuous neural embeddings and discrete symbolic reasoning by mapping dense vectors to \emph{composite prime integers} via Locality Sensitive Hashing (LSH), effectively enabling exact set operations on LSH signatures via unique factorization. Each LSH hyperplane is assigned a unique prime; a concept's integer is the product of primes for its active hyperplanes. This encoding yields three algebraic operations \textbf{impossible} under cosine similarity or Hamming distance: (1)~\emph{logical subsumption} via divisibility, (2)~\emph{concept composition} via LCM, and (3)~\emph{abductive gap analysis} via GCD factorization. We benchmark on a 107-word vocabulary across 8~experiments, achieving $28.4\times$ faster pairwise verification than cosine similarity, and provide honest analysis of limitations. Code: \url{https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine}.
+We propose a method for bridging continuous neural embeddings and discrete symbolic reasoning by mapping dense vectors to \emph{composite prime integers} via Locality Sensitive Hashing (LSH), effectively enabling exact set operations on LSH signatures via unique factorization. Each LSH hyperplane is assigned a unique prime; a concept's integer is the product of primes for its active hyperplanes. This encoding yields three algebraic operations \textbf{impossible} under cosine similarity or Hamming distance: (1)~\emph{logical subsumption} via divisibility, (2)~\emph{concept composition} via LCM, and (3)~\emph{abductive gap analysis} via GCD factorization. We benchmark on a 107-word vocabulary across a series of 9~experiments, achieving $28.4\times$ faster pairwise verification than cosine similarity, and provide honest analysis of limitations. Code: \url{https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine}.
 \end{abstract}
 
 \smallskip
@@ -67,7 +67,7 @@ We introduce a \textbf{lightweight bridging mechanism}: project continuous embed
 \begin{enumerate}[leftmargin=*, nosep]
     \item A \textbf{composite prime encoding} via LSH where each prime factor represents a semantic feature dimension.\vspace{1pt}
     \item Three \textbf{algebraic operations} (subsumption, composition, gap analysis) provably impossible under cosine similarity.\vspace{1pt}
-    \item Eight experiments with \textbf{real data and honest limitations}.\vspace{1pt}
+    \item A series of nine experiments with \textbf{real data and honest limitations}.\vspace{1pt}
     \item A complete open-source implementation.
 \end{enumerate}
 
@@ -246,7 +246,7 @@ Table~\ref{tab:ksweep} shows the effect of $k$ (averaged over 5 seeds):
 \label{tab:ksweep}
 \begin{tabular}{ccccc}
 \toprule
-$k$ & Collision Rate & Avg. Factors & Max Prime & Subsumption Pairs \\
+$k$ & Collision Rate & Avg. Factors & Largest $\Phi$ Value & Subsumption Pairs \\
 \midrule
 3 & 93.8\% & 1.7 & $3.0e+01$ & 5456 $\pm$ 663 \\
 4 & 87.9\% & 2.1 & $2.1e+02$ & 4377 $\pm$ 407 \\
@@ -357,7 +357,7 @@ To confirm the scalability of the proposed method, we tested logical verificatio
     \item \textbf{Discrete Approach (ours):} Integer GCD and modulo operations.
 \end{itemize}
 
-\textbf{Results:} The integer-based validation process operated approximately \textbf{28$\times$ faster} than continuous vectors (depending on hardware backend), utilizing an $O(1)$ memory footprint per operation since it relies on native CPU registers rather than matrix allocation. This serves as a useful and ultra-fast proxy for evaluating relationships at scale.
+\textbf{Results:} The integer-based validation process operated approximately \textbf{28.4$\times$ faster} than continuous vectors (depending on hardware backend), utilizing an $O(1)$ memory footprint per operation since it relies on native CPU registers rather than matrix allocation. This serves as a useful and ultra-fast proxy for evaluating relationships at scale.
 
 \subsection{Experiment 8: Relational Bias Auditing via Topological Shortest Paths}
 
@@ -414,7 +414,7 @@ Equality  & Political  & $\times$ & $\{5,7,11,17\}$   & $\{3,19\}$   & $\{2,13\}
     \item \textbf{None of the 20 concepts} reached consensus ($100\%$ factor agreement), confirming that models with similar cosine profiles can have markedly different discrete structures.
 \end{itemize}
 
-\textbf{Scale results:} Across the full 2{,}000-concept WordNet audit, we evaluated approximately 2~million possible semantic chains (shortest paths). The process identified $108{,}694$ ($5.4\%$) differing relational paths---instances where one model maintained a short semantic chain while the other topologically severed it. This provides a direct, exact technique for model traceability and bias detection.
+\textbf{Scale results:} Across the full 20{,}000-concept WordNet audit, we evaluated approximately 2~million possible semantic chains (shortest paths). The process identified $108{,}694$ ($5.4\%$) differing relational paths---instances where one model maintained a short semantic chain while the other topologically severed it. This provides a direct, exact technique for model traceability and bias detection.
 
 \subsection{Experiment 9: Projection Method Comparison}
 
