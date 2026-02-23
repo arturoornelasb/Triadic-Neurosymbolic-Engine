@@ -3,7 +3,7 @@
 .PHONY: all experiments paper clean
 
 PAPER_DIR = ./paper
-PYTHON = $(PAPER_DIR)/.venv/bin/python
+PYTHON = python
 SRC_DIR = $(PAPER_DIR)/src
 
 all: experiments paper

@@ -320,7 +320,7 @@ $k$ & Correct / Total & Accuracy \\
 
 Table~\ref{tab:gap} shows worked examples of abductive gap analysis on real encoder outputs ($k\!=\!8$, seed~$42$):
 
-\begin{table*}[t]
+\begin{table}[t]
 \centering
 \caption{Worked examples of abductive gap analysis. Each row decomposes the relationship between two concepts into shared backbone (GCD), unique factors, and subsumption status. $k=8$, seed $=42$.}
 \label{tab:gap}
@@ -336,7 +336,7 @@ Car & Bicycle & 595 & 124355 & 595 [5, 7, 17] & 1 [] & 209 [11, 19] & $\times$ &
 Love & Hate & 7735 & 1105 & 1105 [5, 13, 17] & 7 [7] & 1 [] & \checkmark & $\times$ \\
 \bottomrule
 \end{tabular}
-\end{table*}
+\end{table}
 
 \noindent\textbf{Key observations:}
 \begin{itemize}[nosep, leftmargin=*]
@@ -382,7 +382,7 @@ For example, if prime 5 appears in $\Phi(\text{King})$, $\Phi(\text{Queen})$, an
 
 We audited 20 concepts across 6 semantic categories (emotions, professions, elements, political concepts) between two Sentence-Transformer models ($k\!=\!8$). Table~\ref{tab:audit} shows a representative subset:
 
-\begin{table*}[t]
+\begin{table}[t]
 \centering
 \caption{Relational bias audit: concept-level prime factor comparison between \texttt{all-MiniLM-L6-v2} and \texttt{paraphrase-MiniLM-L3-v2}. ``Shared GCD'' shows factors both models agree on. Unique columns show factors active in only one model. $k=8$, seed$=42$.}
 \label{tab:audit}
@@ -404,7 +404,7 @@ Justice   & Political  & $\times$ & $\{2,3,11,17\}$   & $\{19\}$     & $\{5,7\}$
 Equality  & Political  & $\times$ & $\{5,7,11,17\}$   & $\{3,19\}$   & $\{2,13\}$ \\
 \bottomrule
 \end{tabular}
-\end{table*}
+\end{table}
 
 \noindent\textbf{Key observations:}
 \begin{itemize}[nosep, leftmargin=*]

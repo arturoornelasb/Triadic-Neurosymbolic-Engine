@@ -7,7 +7,7 @@ import os
 import csv
 import io
 from typing import Dict, List, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class PrimeIndexDB:
@@ -61,7 +61,7 @@ class PrimeIndexDB:
     
     def save_index(self, prime_map: Dict[str, int], model: str, lsh_bits: int, seed: int):
         """Save a prime map to the database. Upserts on conflict."""
-        now = datetime.utcnow().isoformat()
+        now = datetime.now(timezone.utc).isoformat()
         with sqlite3.connect(self.db_path) as conn:
             for text, prime_factor in prime_map.items():
                 conn.execute("""
@@ -82,7 +82,7 @@ class PrimeIndexDB:
     
     def save_audit(self, results: List[dict], model_a: str, model_b: str):
         """Save audit discrepancy results."""
-        now = datetime.utcnow().isoformat()
+        now = datetime.now(timezone.utc).isoformat()
         with sqlite3.connect(self.db_path) as conn:
             for r in results:
                 conn.execute("""

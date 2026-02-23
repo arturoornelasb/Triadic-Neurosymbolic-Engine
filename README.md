@@ -22,13 +22,20 @@ pip install -e .
 from neurosym import ContinuousEncoder, DiscreteMapper, DiscreteValidator
 
 encoder = ContinuousEncoder("all-MiniLM-L6-v2")
-mapper = DiscreteMapper(n_bits=8, seed=42)
+
+# Choose a projection mode:
+mapper = DiscreteMapper(n_bits=8, projection="pca")       # Deterministic, corpus-adapted
+# mapper = DiscreteMapper(n_bits=8, projection="random")   # Classic LSH
+# mapper = DiscreteMapper(n_bits=8, projection="consensus") # Multi-seed noise filtering
+# mapper = DiscreteMapper(n_bits=8, projection="contrastive",  # Supervised
+#                         hypernym_pairs=[("Animal","Dog"), ("Vehicle","Car")])
 
 embeddings = encoder.encode(["King", "Queen", "Man", "Woman"])
 prime_map = mapper.fit_transform(["King", "Queen", "Man", "Woman"], embeddings)
 
 validator = DiscreteValidator()
-print(validator.validate_relationship(prime_map["King"], prime_map["Queen"], prime_map["Man"]))
+print(validator.subsumes(prime_map["King"], prime_map["Queen"]))  # Subsumption check
+print(validator.explain_gap(prime_map["King"], prime_map["Queen"]))  # Gap analysis
 ```
 
 ## How It Works
@@ -46,11 +53,20 @@ Each concept becomes a single integer whose **prime factors are its semantic fea
 | **Composition** | `lcm(Φ(A), Φ(B))` | "What concept has all features of both A and B?" |
 | **Gap Analysis** | `gcd(Φ(A), Φ(B))` + quotients | "Which features do they share? Which are unique?" |
 
+## Projection Modes
+
+| Mode | Deterministic | Requires Labels | Best For |
+|------|:---:|:---:|------------|
+| `random` | ✗ (seed-dependent) | ✗ | Baseline, exploration |
+| `pca` | ✓ | ✗ | Production, reproducibility |
+| `consensus` | ✓ | ✗ | Noise filtering, stability analysis |
+| `contrastive` | ✓ | ✓ (hypernym pairs) | Maximum accuracy (100% TP at k=6) |
+
 ## Core Modules
 
 | Module | Description |
 |--------|-------------|
-| `neurosym.encoder` | Multi-backend embedding encoder (HuggingFace, OpenAI, Cohere) + LSH→Prime projection |
+| `neurosym.encoder` | Multi-backend embedding encoder (HuggingFace, OpenAI, Cohere) + 4-mode LSH→Prime projection |
 | `neurosym.triadic` | Algebraic validation: subsumption, composition, abductive gap analysis |
 | `neurosym.graph` | Scalable graph builder with inverted prime index (avoids O(N²)) |
 | `neurosym.storage` | SQLite persistence for prime indices and audit results |
@@ -74,19 +90,20 @@ The AI Auditor compares how different embedding models structure the same concep
 # Massive topological audit (model vs model)
 python scripts/triadic_auditor.py --input examples/data/wordnet_2k.csv --output reports/audit.csv
 
-# Reproduce paper benchmarks
-python scripts/run_experiments.py
+# PCA vs Random vs Consensus vs Contrastive benchmark
+python scripts/benchmark_pca.py
 ```
 
 ## Benchmarks
 
 - **28.4× faster** pairwise verification than cosine similarity (50K operations)
 - **100% composition guarantee** verified across 5,671 word pairs
+- **100% hypernym detection** with contrastive projection at k=6
 - **108,694 discrepancies** found auditing 2M semantic chains across 2 models
 
 ## Academic Paper
 
-The full paper with 8 experiments is in [`paper/`](paper/), compilable with:
+The full paper with 9 experiments is in [`paper/`](paper/), compilable with:
 
 ```bash
 cd paper && pdflatex -output-directory=. src/main.tex
@@ -108,9 +125,8 @@ cd paper && pdflatex -output-directory=. src/main.tex
 
 ```
 ├── src/neurosym/          ← Core Python package (pip installable)
-├── paper/                 ← Academic paper (LaTeX)
+├── paper/                 ← Academic paper (LaTeX, 11 pages)
 ├── app.py                 ← Streamlit interactive dashboard
-├── notebooks/             ← Reproducibility demos (Jupyter)
 ├── scripts/               ← CLI auditing & benchmark tools
 ├── tests/                 ← Test suite
 ├── examples/              ← Usage examples & sample data

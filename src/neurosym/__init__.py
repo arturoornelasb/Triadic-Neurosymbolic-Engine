@@ -20,6 +20,8 @@ from neurosym.triadic import DiscreteValidator
 from neurosym.storage import PrimeIndexDB
 from neurosym.graph import ScalableGraphBuilder
 from neurosym.reports import ReportGenerator
+from neurosym.anomaly import AnomalyDetector, RelationalRule
+from neurosym.ingest import DatabaseIngestor
 
 __all__ = [
     "BaseEncoder",
@@ -31,6 +33,9 @@ __all__ = [
     "PrimeIndexDB",
     "ScalableGraphBuilder",
     "ReportGenerator",
+    "AnomalyDetector",
+    "RelationalRule",
+    "DatabaseIngestor",
     "create_encoder",
 ]
 

@@ -1,5 +1,6 @@
 {
     "title": "Triadic Neurosymbolic Engine: Prime Factorization as a Neurosymbolic Bridge for Deterministic Verification",
+    "version": "0.1.0",
     "description": "A deterministic algebraic framework that projects continuous neural embeddings into composite prime integers via Locality Sensitive Hashing, enabling exact logical operations (subsumption, composition, gap analysis) impossible under cosine similarity. Achieves 28.4x faster pairwise verification with fully transparent, interpretable results.",
     "creators": [
         {
@@ -28,6 +29,5 @@
             "scheme": "url"
         }
     ],
-    "language": "eng",
-    "version": "0.1.0"
+    "language": "eng"
 }
