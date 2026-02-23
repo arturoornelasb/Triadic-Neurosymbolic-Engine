@@ -157,31 +157,72 @@ class DiscreteMapper:
     Each LSH hyperplane is assigned a unique prime number. A concept's
     discrete representation is the product of all primes corresponding
     to hyperplanes where its projection is positive.
+    
+    Supports two projection modes:
+        - 'random' (default): Random hyperplanes from N(0, I_d)
+        - 'pca': Principal Component directions from the corpus
+          (deterministic, seed-independent, corpus-adapted)
     """
-    def __init__(self, n_bits: int = 16, seed: int = 42):
+    def __init__(self, n_bits: int = 16, seed: int = 42, projection: str = "random"):
         self.n_bits = n_bits
         self.random_state = np.random.RandomState(seed)
-        self.random_planes = None
+        self.projection = projection
+        self.planes = None
         self.concept_to_prime: Dict[str, int] = {}
         
     def _generate_random_planes(self, dim: int):
-        self.random_planes = self.random_state.randn(self.n_bits, dim)
+        """Generate random hyperplanes from N(0, I_d)."""
+        self.planes = self.random_state.randn(self.n_bits, dim)
+    
+    def _generate_pca_planes(self, embeddings: np.ndarray):
+        """
+        Generate hyperplanes from the top-k principal components.
+        
+        This makes the encoding:
+          - Deterministic (no seed dependency)
+          - Corpus-adapted (captures actual variance directions)
+          - More semantically meaningful (each hyperplane splits
+            along a direction of maximum variance in the data)
+        """
+        from sklearn.decomposition import PCA
+        
+        k = min(self.n_bits, embeddings.shape[1], embeddings.shape[0])
+        pca = PCA(n_components=k)
+        pca.fit(embeddings)
+        
+        # Use the principal component vectors as hyperplane normals
+        self.planes = pca.components_[:self.n_bits]
+        
+        # If we need more planes than PCA gives, pad with random ones
+        if self.planes.shape[0] < self.n_bits:
+            extra = self.random_state.randn(
+                self.n_bits - self.planes.shape[0], embeddings.shape[1]
+            )
+            self.planes = np.vstack([self.planes, extra])
+        
+        logger.info(
+            f"PCA projection: {k} components explain "
+            f"{sum(pca.explained_variance_ratio_[:k])*100:.1f}% of variance"
+        )
 
     def fit_transform(self, concepts: List[str], embeddings: np.ndarray) -> Dict[str, int]:
         """
         Maps a list of concepts and their continuous embeddings to discrete composite primes.
         Each LSH hyperplane corresponds to a unique prime number.
         """
-        logger.info(f"Mapping {len(concepts)} concepts to discrete integer space...")
+        logger.info(f"Mapping {len(concepts)} concepts to discrete integer space (mode={self.projection})...")
         
-        if self.random_planes is None:
-            self._generate_random_planes(embeddings.shape[1])
+        if self.planes is None:
+            if self.projection == "pca":
+                self._generate_pca_planes(embeddings)
+            else:
+                self._generate_random_planes(embeddings.shape[1])
             
         # Assign a prime to each hyperplane (Semantic Feature)
         plane_primes = [sympy.prime(i + 1) for i in range(self.n_bits)]
         
         for concept, emb in zip(concepts, embeddings):
-            projections = np.dot(self.random_planes, emb)
+            projections = np.dot(self.planes, emb)
             bits = (projections > 0).astype(int)
             
             # The discrete integer is the product of its active semantic feature primes
@@ -192,7 +233,7 @@ class DiscreteMapper:
             
             # Fallback for origin vector
             if composite_integer == 1:
-                composite_integer = 2 # minimum prime
+                composite_integer = 2  # minimum prime
                 
             self.concept_to_prime[concept] = composite_integer
             
@@ -202,3 +243,4 @@ class DiscreteMapper:
         if concept not in self.concept_to_prime:
             raise ValueError(f"Concept '{concept}' not found in the discrete mapping.")
         return self.concept_to_prime[concept]
+

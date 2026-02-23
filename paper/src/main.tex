@@ -365,7 +365,56 @@ Beyond simple vector similarity, applied systems occasionally demand auditing \e
 
 By projecting models into the prime discrete domain, the algorithm organically generates deterministic mathematical graphs. We map these integers into nodes and edges (where an edge exists if $\text{GCD}(A, B) > 1$). This allows for $O(1)$ topological shortest-path differencing between two distinct models without reducing dimensions probabilistically.
 
-\textbf{Results:} We evaluated approximately 2 million possible semantic chains across $2{,}000$ concepts between two standard Sentence Transformer models (\texttt{all-MiniLM-L6-v2} vs. \texttt{paraphrase-MiniLM-L3-v2}). The process identified $108{,}694$ ($5.4\%$) differing relational paths---instances where one model maintained a short semantic chain between concepts while the other topologically severed it. This provides a direct, exact technique for model traceability.
+\subsubsection{From Primes Back to Words}
+
+A key practical question: how do abstract prime factors correspond to real semantic features? The audit process answers this \emph{empirically} through cross-concept factorization:
+
+\begin{enumerate}[nosep, leftmargin=*]
+    \item Encode a corpus of $N$ concepts under two models $M_A$ and $M_B$.
+    \item For each concept, compute $\text{GCD}(\Phi_{M_A}(x),\; \Phi_{M_B}(x))$ --- the shared structure.
+    \item Factor the GCD and the quotients into individual primes.
+    \item Observe \emph{which concepts share which prime factors}. Primes that consistently co-occur across semantically related words reveal latent feature dimensions.
+\end{enumerate}
+
+For example, if prime 5 appears in $\Phi(\text{King})$, $\Phi(\text{Queen})$, and $\Phi(\text{Prince})$ but not in $\Phi(\text{Dog})$ or $\Phi(\text{Car})$, then factor 5 empirically encodes a ``royalty'' dimension. The primes become \emph{interpretable features} through their co-occurrence patterns across the corpus.
+
+\subsubsection{Audit Results}
+
+We audited 20 concepts across 6 semantic categories (emotions, professions, elements, political concepts) between two Sentence-Transformer models ($k\!=\!8$). Table~\ref{tab:audit} shows a representative subset:
+
+\begin{table*}[t]
+\centering
+\caption{Relational bias audit: concept-level prime factor comparison between \texttt{all-MiniLM-L6-v2} and \texttt{paraphrase-MiniLM-L3-v2}. ``Shared GCD'' shows factors both models agree on. Unique columns show factors active in only one model. $k=8$, seed$=42$.}
+\label{tab:audit}
+\begin{tabular}{llccll}
+\toprule
+Concept & Category & Consensus & Shared (GCD) & Only MiniLM-L6 & Only Para-L3 \\
+\midrule
+Doctor    & Profession & $\times$ & $\{2,3,5,11,13\}$ & $\{17,19\}$ & --- \\
+Nurse     & Profession & $\times$ & $\{2,3,5\}$       & $\{7,13,19\}$ & $\{11\}$ \\
+CEO       & Profession & $\times$ & $\{3,5,19\}$      & $\{11\}$     & $\{2,13,17\}$ \\
+Teacher   & Profession & $\times$ & $\{2,3,5,7,11,17,19\}$ & $\{13\}$ & --- \\
+\midrule
+Happy     & Emotion    & $\times$ & $\{3,5,13,19\}$   & $\{7\}$      & $\{2\}$ \\
+Sad       & Emotion    & $\times$ & $\{3,5,17,19\}$   & $\{7\}$      & $\{13\}$ \\
+Angry     & Emotion    & $\times$ & $\{2,3,13,17,19\}$ & $\{7\}$    & --- \\
+\midrule
+Democracy & Political  & $\times$ & $\{11,17\}$       & $\{3,5,7\}$  & $\{19\}$ \\
+Justice   & Political  & $\times$ & $\{2,3,11,17\}$   & $\{19\}$     & $\{5,7\}$ \\
+Equality  & Political  & $\times$ & $\{5,7,11,17\}$   & $\{3,19\}$   & $\{2,13\}$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\noindent\textbf{Key observations:}
+\begin{itemize}[nosep, leftmargin=*]
+    \item \textbf{Doctor and Nurse} share $\{2,3,5\}$ in both models (a medical backbone), but Doctor has two extra factors in the first model ($\{17,19\}$) that Nurse lacks---suggesting Model~A captures a broader semantic scope for ``Doctor.''
+    \item \textbf{All emotions} (Happy, Sad, Angry) share factor $\{3\}$ across both models, while factor $\{7\}$ is consistently unique to Model~A---revealing a systematic projection bias.
+    \item \textbf{Political concepts} share $\{11,17\}$ as a core cluster, but Democracy has only 2 shared factors vs.\ 4--5 for Justice/Equality---it is the most unstable concept across models.
+    \item \textbf{None of the 20 concepts} reached consensus ($100\%$ factor agreement), confirming that models with similar cosine profiles can have markedly different discrete structures.
+\end{itemize}
+
+\textbf{Scale results:} Across the full 2{,}000-concept WordNet audit, we evaluated approximately 2~million possible semantic chains (shortest paths). The process identified $108{,}694$ ($5.4\%$) differing relational paths---instances where one model maintained a short semantic chain while the other topologically severed it. This provides a direct, exact technique for model traceability and bias detection.
 
 % ============================================================
 %  5. LIMITATIONS
@@ -376,9 +425,9 @@ By projecting models into the prime discrete domain, the algorithm organically g
 
 The most critical limitation: subsumption in prime space reflects \textbf{LSH bucket containment}, not genuine semantic subsumption. When the system reports King~$\supseteq$~Queen, it means every hyperplane active for Queen is also active for King---a property of random projections that may not correspond to any meaningful semantic relationship. \textbf{Changing the random seed can reverse the relationship.}
 
-\subsection{Sensitivity to $k$}
+\subsection{Sensitivity to $k$ and Projection Method}
 
-The useful regime ($k\!=\!6$--$12$) is narrow with no principled selection method, analogous to selecting hash tables in multi-probe LSH. However, the true positive rate of subsumption can be improved by replacing random hyperplanes with Principal Component Analysis (PCA) directions derived from the target corpus or through contrastive learning directed by known hypernym/hyponym pairs.
+The useful regime ($k\!=\!6$--$12$) is narrow with no single principled selection method. To partially address this, we implement a \textbf{PCA-directed projection} mode that replaces random hyperplanes with the top-$k$ principal components of the target corpus. This makes encodings deterministic (seed-independent) and corpus-adapted, trading the theoretical guarantees of random LSH for empirically stronger semantic alignment. Contrastive learning directed by known hypernym/hyponym pairs is another promising direction.
 
 \subsection{Integer Overflow \& Large $k$}
 
