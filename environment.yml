@@ -1,0 +1,24 @@
+name: neurosym
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - numpy>=1.20
+  - networkx>=2.5
+  - scikit-learn>=1.0
+  - sympy>=1.12
+  - pandas>=2.0.0
+  - pip
+  - pip:
+    - sentence-transformers>=2.2
+    - streamlit>=1.31.0
+    - streamlit-agraph>=0.0.45
+    - fastapi>=0.109.0
+    - uvicorn[standard]>=0.27.0
+    - pydantic>=2.0
+    - pytest>=7.0
+    - black>=22.0
+    - flake8>=4.0
+    - httpx>=0.25.0
+    - -e .
