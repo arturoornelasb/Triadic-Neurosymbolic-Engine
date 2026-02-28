@@ -391,5 +391,34 @@ class DiscreteMapper:
     
     def get_factor(self, concept: str) -> int:
         if concept not in self.concept_to_prime:
-            raise ValueError(f"Concept '{concept}' not found in the discrete mapping.")
+            raise ValueError(f"Concept '{concept}' not found in the discrete mapping. Use transform() for new concepts.")
         return self.concept_to_prime[concept]
+
+    def transform(self, concepts: List[str], embeddings: np.ndarray) -> Dict[str, int]:
+        """
+        Maps a list of new concepts to discrete composite primes using EXISTING planes.
+        Does NOT update internal planes.
+        """
+        if self.planes is None:
+            raise ValueError("DiscreteMapper has not been fitted. Call fit_transform first.")
+            
+        plane_primes = [sympy.prime(i + 1) for i in range(self.n_bits)]
+        results = {}
+        
+        for concept, emb in zip(concepts, embeddings):
+            projections = np.dot(self.planes, emb)
+            bits = (projections > 0).astype(int)
+            
+            composite_integer = 1
+            for bit, prime_factor in zip(bits, plane_primes):
+                if bit == 1:
+                    composite_integer *= prime_factor
+            
+            if composite_integer == 1:
+                composite_integer = 2
+            
+            results[concept] = composite_integer
+            # Optionally cache it
+            self.concept_to_prime[concept] = composite_integer
+            
+        return results
