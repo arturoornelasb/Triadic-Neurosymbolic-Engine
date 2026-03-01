@@ -1,6 +1,6 @@
 # Triadic Neurosymbolic Engine
 
-[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
+[![License: BUSL-1.1](https://img.shields.io/badge/License-BUSL--1.1-blue.svg)](https://mariadb.com/bsl11/)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![PyPI](https://img.shields.io/pypi/v/neurosym.svg)](https://pypi.org/project/neurosym/)
 [![CI](https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine/actions/workflows/ci.yml/badge.svg)](https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine/actions)
@@ -231,8 +231,17 @@ make paper   # requires pdflatex + bibtex
 
 ## License
 
-Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+**Business Source License 1.1 (BUSL-1.1)**
 
-You may share and adapt this work for non-commercial purposes with attribution. For commercial use, see the [Triadic Cloud API](https://fuaflow.com/triadic/) or contact: arturoornelas62@gmail.com
+| | Permitido |
+|---|---|
+| Uso académico / investigación / proyectos personales | ✅ Sin restricción |
+| Self-hosted / tooling interno | ✅ Sin restricción |
+| Producción propia (no competidora) | ✅ Sin restricción |
+| Ofrecer una API de búsqueda semántica neurosimbólica a terceros | ❌ Requiere licencia comercial |
+
+**Change Date:** 2030-01-01 → convierte automáticamente a Apache 2.0.
+
+Para uso comercial como servicio de API, usa el [Triadic Cloud API](https://fuaflow.com/triadic/) o contacta: arturoornelas62@gmail.com
 
 © 2026 José Arturo Ornelas Brand
