@@ -2,6 +2,7 @@
 
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![PyPI](https://img.shields.io/pypi/v/neurosym.svg)](https://pypi.org/project/neurosym/)
 [![CI](https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine/actions/workflows/ci.yml/badge.svg)](https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine/actions)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18748671.svg)](https://doi.org/10.5281/zenodo.18748671)
 
@@ -13,31 +14,67 @@ The Triadic Engine tells you *"King = 2×3×5 and Queen = 2×5×7. They share {2
 
 ---
 
-## Quickstart
+## Why not cosine similarity?
+
+| | Cosine Similarity | **Triadic Engine** |
+|---|:---:|:---:|
+| Speed (50K pairs) | baseline | **28.4× faster** |
+| Explainability | Black box | ✅ Prime factor proof |
+| Subsumption (`A ⊆ B`?) | ❌ Approximation | ✅ Exact (`Φ(A) mod Φ(B) == 0`) |
+| Composition (`A ∪ B`) | ❌ Geometric average | ✅ `lcm(Φ(A), Φ(B))` |
+| Gap analysis | ❌ Not possible | ✅ `gcd` + quotient decomposition |
+| Determinism | ❌ Seed-dependent | ✅ PCA / contrastive modes |
+| AI model audit | ❌ Not supported | ✅ Topological discrepancy |
+
+---
+
+## Install
 
 ```bash
-# Install
-pip install -e .
+# Local research / open-source (CC BY-NC 4.0)
+pip install neurosym
 
-# Python API
+# Optional extras
+pip install "neurosym[dashboard]"  # Streamlit dashboard
+pip install "neurosym[api]"        # FastAPI server
+pip install "neurosym[dev]"        # Development tools
+```
+
+> **Hosted Cloud API (no GPU needed, commercial use):**
+> ```bash
+> pip install neurosym-cloud
+> ```
+> See [Triadic Cloud API →](https://fuaflow.com/triadic/)
+
+---
+
+## Quickstart
+
+```python
 from neurosym import ContinuousEncoder, DiscreteMapper, DiscreteValidator
 
 encoder = ContinuousEncoder("all-MiniLM-L6-v2")
 
 # Choose a projection mode:
-mapper = DiscreteMapper(n_bits=8, projection="pca")       # Deterministic, corpus-adapted
-# mapper = DiscreteMapper(n_bits=8, projection="random")   # Classic LSH
+mapper = DiscreteMapper(n_bits=8, projection="pca")        # Deterministic, corpus-adapted
+# mapper = DiscreteMapper(n_bits=8, projection="random")    # Classic LSH
 # mapper = DiscreteMapper(n_bits=8, projection="consensus") # Multi-seed noise filtering
-# mapper = DiscreteMapper(n_bits=8, projection="contrastive",  # Supervised
+# mapper = DiscreteMapper(n_bits=8, projection="contrastive",   # Supervised
 #                         hypernym_pairs=[("Animal","Dog"), ("Vehicle","Car")])
 
-embeddings = encoder.encode(["King", "Queen", "Man", "Woman"])
-prime_map = mapper.fit_transform(["King", "Queen", "Man", "Woman"], embeddings)
+concepts = ["King", "Queen", "Man", "Woman"]
+embeddings = encoder.encode(concepts)
+prime_map = mapper.fit_transform(concepts, embeddings)
 
 validator = DiscreteValidator()
-print(validator.subsumes(prime_map["King"], prime_map["Queen"]))  # Subsumption check
-print(validator.explain_gap(prime_map["King"], prime_map["Queen"]))  # Gap analysis
+print(validator.subsumes(prime_map["King"], prime_map["Queen"]))
+# → {"subsumes": False, "shared": [2, 5], "a_only": [3], "b_only": [7]}
+
+print(validator.explain_gap(prime_map["King"], prime_map["Queen"]))
+# → "King and Queen share {Royalty}. King has {Male}. Queen has {Female}."
 ```
+
+---
 
 ## How It Works
 
@@ -54,6 +91,8 @@ Each concept becomes a single integer whose **prime factors are its semantic fea
 | **Composition** | `lcm(Φ(A), Φ(B))` | "What concept has all features of both A and B?" |
 | **Gap Analysis** | `gcd(Φ(A), Φ(B))` + quotients | "Which features do they share? Which are unique?" |
 
+---
+
 ## Projection Modes
 
 | Mode | Deterministic | Requires Labels | Best For |
@@ -62,6 +101,8 @@ Each concept becomes a single integer whose **prime factors are its semantic fea
 | `pca` | ✓ | ✗ | Production, reproducibility |
 | `consensus` | ✓ | ✗ | Noise filtering, stability analysis |
 | `contrastive` | ✓ | ✓ (hypernym pairs) | Maximum accuracy (100% TP at k=6) |
+
+---
 
 ## Core Modules
 
@@ -75,15 +116,34 @@ Each concept becomes a single integer whose **prime factors are its semantic fea
 | `neurosym.ingest` | Database ingestion pipeline with batch processing |
 | `neurosym.anomaly` | Multiplicative anomaly detection for tabular data |
 
+---
+
+## Use Cases
+
+**Explainable RAG** — Instead of returning top-k by cosine score, return documents whose prime signatures *subsume* the query signature. Every result is provably relevant.
+
+**AI Model Auditing** — Detect when two LLMs structure the same concept differently. The engine found 108,694 discrepancies auditing 2M semantic chains across two embedding models.
+
+**Semantic Deduplication** — Two records are semantically duplicate if `Φ(A) mod Φ(B) == 0`. Exact, not probabilistic.
+
+**Compliance Validation** — Verify that "GDPR" subsumes "consent" and "data-subject-rights" in your ontology. Machine-checkable, not fuzzy.
+
+**Anomaly Detection** — Tabular rows that break the multiplicative patterns of their peers are flagged as anomalies — with a proof, not just a score.
+
+---
+
 ## Interactive Dashboard
 
 ```bash
+pip install "neurosym[dashboard]"
 streamlit run app.py
 ```
 
 Five tabs: **Ingestion**, **Semantic Graph**, **Logic & Search**, **AI Auditor**, **Benchmarks**
 
 The AI Auditor compares how different embedding models structure the same concepts using topological shortest-path differencing — finding exact structural discrepancies between models.
+
+---
 
 ## CLI Tools
 
@@ -95,25 +155,50 @@ python scripts/triadic_auditor.py --input examples/data/wordnet_2k.csv --output 
 python scripts/benchmark_pca.py
 ```
 
+---
+
 ## Benchmarks
 
-- **28.4× faster** pairwise verification than cosine similarity (50K operations)
-- **100% composition guarantee** verified across 5,671 word pairs
-- **100% hypernym detection** with contrastive projection at k=6
-- **108,694 discrepancies** found auditing 2M semantic chains across 2 models
+| Metric | Result |
+|--------|--------|
+| Pairwise verification speed | **28.4× faster** than cosine (50K operations) |
+| Composition guarantee | **100%** verified across 5,671 word pairs |
+| Hypernym detection accuracy | **100% TP** with contrastive projection at k=6 |
+| Model audit scale | **108,694 discrepancies** in 2M semantic chains (2 models) |
+
+---
+
+## Triadic Cloud API
+
+The open-source engine runs locally. For production workloads without GPU setup, the **[Triadic Cloud API](https://fuaflow.com/triadic/)** is the hosted version:
+
+```python
+# pip install neurosym-cloud
+from neurosym_cloud import TriadicClient
+
+client = TriadicClient(api_key="tne-...")
+result = client.encode(["King", "Queen"])
+print(client.subsumes("King", "Queen"))
+```
+
+| Tier | Price | Requests/day |
+|------|-------|-------------|
+| Community | Free | 100 |
+| Pro | $29/mo | 5,000 |
+| Enterprise | $299/mo | Unlimited + SLA |
+
+---
 
 ## Academic Paper
 
-The full paper with 9 experiments is in [`paper/`](paper/), compilable with:
+Full paper with 9 experiments: [`paper/`](paper/)
 
 ```bash
 cd paper
-pdflatex -output-directory=. -jobname=PrimeFactorization_NeurosymbolicBridge_OrnelasBrand_2026 src/main.tex
-bibtex PrimeFactorization_NeurosymbolicBridge_OrnelasBrand_2026
-pdflatex -output-directory=. -jobname=PrimeFactorization_NeurosymbolicBridge_OrnelasBrand_2026 src/main.tex
-pdflatex -output-directory=. -jobname=PrimeFactorization_NeurosymbolicBridge_OrnelasBrand_2026 src/main.tex
-# Or simply run `make paper` from the root directory
+make paper   # requires pdflatex + bibtex
 ```
+
+---
 
 ## Citation
 
@@ -123,9 +208,12 @@ pdflatex -output-directory=. -jobname=PrimeFactorization_NeurosymbolicBridge_Orn
   title        = {Triadic Neurosymbolic Engine: Prime Factorization as a
                   Neurosymbolic Bridge for Deterministic Verification},
   year         = 2026,
+  doi          = {10.5281/zenodo.18748671},
   url          = {https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine}
 }
 ```
+
+---
 
 ## Project Structure
 
@@ -139,10 +227,12 @@ pdflatex -output-directory=. -jobname=PrimeFactorization_NeurosymbolicBridge_Orn
 └── pyproject.toml         ← Package metadata & dependencies
 ```
 
+---
+
 ## License
 
 Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
 
-You may share and adapt this work for non-commercial purposes with attribution. For commercial licensing inquiries, contact: arturoornelas62@gmail.com
+You may share and adapt this work for non-commercial purposes with attribution. For commercial use, see the [Triadic Cloud API](https://fuaflow.com/triadic/) or contact: arturoornelas62@gmail.com
 
 © 2026 José Arturo Ornelas Brand
