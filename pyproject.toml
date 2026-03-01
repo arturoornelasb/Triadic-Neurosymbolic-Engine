@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "A Deterministic Algebraic Framework for Neurosymbolic Validation and Semantic Projection"
 readme = "README.md"
 requires-python = ">=3.9"
-license = { text = "CC-BY-NC-4.0" }
+license = { text = "BUSL-1.1" }
 authors = [
     { name = "José Arturo Ornelas Brand", email = "arturoornelas62@gmail.com" }
 ]

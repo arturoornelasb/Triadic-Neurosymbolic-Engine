@@ -128,6 +128,15 @@ class PrimeIndexDB:
         writer.writerows(rows)
         return output.getvalue()
     
+    def delete_index(self, model: str, lsh_bits: int, seed: int) -> int:
+        """Delete all concepts for a given named index. Returns number of rows deleted."""
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.execute(
+                "DELETE FROM concepts WHERE model = ? AND lsh_bits = ? AND seed = ?",
+                (model, lsh_bits, seed)
+            )
+        return cursor.rowcount
+
     def concept_count(self) -> int:
         """Return total number of stored concepts."""
         with sqlite3.connect(self.db_path) as conn:

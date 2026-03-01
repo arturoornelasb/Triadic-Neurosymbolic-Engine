@@ -85,10 +85,10 @@ class DatabaseIngestor:
         if not self.is_indexed:
             raise ValueError("No database loaded. Please ingest data first.")
             
-        # 1. Project query into discrete prime space
+        # 1. Project query into discrete prime space (reuse existing planes)
         query_emb = self.encoder.encode([query])
-        self.mapper.fit_transform([query], query_emb)
-        query_prime = self.mapper.concept_to_prime[query]
+        query_prime_map = self.mapper.transform([query], query_emb)
+        query_prime = query_prime_map[query]
         
         # 2. Find candidates via inverted index (set union)
         query_factors = self._factorize(query_prime)

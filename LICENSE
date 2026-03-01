@@ -1,22 +1,35 @@
-Creative Commons Attribution-NonCommercial 4.0 International
+Business Source License 1.1
 
-Copyright (c) 2026 José Arturo Ornelas Brand
+Licensed Work:     Triadic Neurosymbolic Engine
+Licensor:          José Arturo Ornelas Brand <arturoornelas62@gmail.com>
+Change Date:       2030-01-01
+Change License:    Apache License, Version 2.0
 
-You are free to:
+Additional Use Grant:
+  You may make production use of the Licensed Work, provided that such
+  production use does not consist of offering a competing neurosymbolic
+  validation or semantic projection API service to third parties.
 
-  Share — copy and redistribute the material in any medium or format
-  Adapt — remix, transform, and build upon the material
+  Academic use, personal projects, internal tooling, and self-hosted
+  deployments are permitted without restriction.
 
-Under the following terms:
+Terms:
+  The Licensor hereby grants you the right to copy, modify, create
+  derivative works, redistribute, and make non-production use of the
+  Licensed Work. The Licensor may make an Additional Use Grant above,
+  permitting limited production use.
 
-  Attribution — You must give appropriate credit, provide a link to
-  the license, and indicate if changes were made.
+  Effective on the Change Date, or the fourth anniversary of the first
+  publicly available distribution of a specific version of the Licensed
+  Work under this License, whichever comes first, the Licensor hereby
+  grants you rights under the terms of the Change License, and the
+  rights granted in the paragraph above terminate.
 
-  NonCommercial — You may not use the material for commercial purposes.
+  If your use of the Licensed Work does not comply with the requirements
+  currently in effect as described in this License, you must purchase a
+  commercial license from the Licensor, its affiliated entities, or
+  authorized resellers, or you must refrain from using the Licensed Work.
 
-No additional restrictions — You may not apply legal terms or technological
-measures that legally restrict others from doing anything the license permits.
+  For commercial licensing inquiries, contact: arturoornelas62@gmail.com
 
-Full license text: https://creativecommons.org/licenses/by-nc/4.0/legalcode
-
-For commercial licensing inquiries, contact: arturoornelas62@gmail.com
+  Full BUSL-1.1 text: https://mariadb.com/bsl11/

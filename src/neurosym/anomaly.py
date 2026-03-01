@@ -57,16 +57,21 @@ class AnomalyDetector:
         logger.info(f"Added rule '{rule.name}': {' × '.join(rule.factor_columns)} = {rule.result_column}")
     
     def _classify_severity(self, ratio: float, tolerance: float) -> str:
-        """Classify how severe the anomaly is based on the deviation ratio."""
+        """Classify how severe the anomaly is based on deviation relative to tolerance.
+
+        Thresholds are expressed as multiples of the rule's tolerance, so a tight
+        tolerance (0.001) flags small deviations as CRITICAL while a loose tolerance
+        (0.05) only escalates large ones.
+        """
         deviation = abs(ratio - 1.0)
         if deviation <= tolerance:
             return "CLEAN"
-        elif deviation <= 0.05:
-            return "INFO"      # Small rounding error (1-5%)
-        elif deviation <= 0.20:
-            return "WARNING"   # Significant deviation (5-20%)
+        elif deviation <= tolerance * 5:
+            return "INFO"      # Up to 5× tolerance — likely rounding
+        elif deviation <= tolerance * 20:
+            return "WARNING"   # Up to 20× tolerance — significant
         else:
-            return "CRITICAL"  # Major discrepancy (>20%)
+            return "CRITICAL"  # More than 20× tolerance — major discrepancy
     
     def scan(self, df: pd.DataFrame) -> List[Anomaly]:
         """
