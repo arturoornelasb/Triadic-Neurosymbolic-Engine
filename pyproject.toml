@@ -4,13 +4,30 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "neurosym"
-version = "0.1.0"
-description = "A Deterministic Algebraic Framework for Neurosymbolic Validation and Semantic Projection"
+version = "0.2.0"
+description = "Deterministic algebraic semantic search via prime factorization — 28x faster than cosine, fully explainable"
 readme = "README.md"
-requires-python = ">=3.9"
-license = { text = "BUSL-1.1" }
+requires-python = ">=3.10"
+license = { text = "CC BY-NC 4.0" }
 authors = [
     { name = "José Arturo Ornelas Brand", email = "arturoornelas62@gmail.com" }
+]
+keywords = [
+    "neurosymbolic", "semantic-search", "prime-factorization",
+    "nlp", "embeddings", "explainable-ai", "knowledge-graph",
+    "triadic", "deterministic", "algebraic"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
 ]
 dependencies = [
     "numpy>=1.20",
@@ -18,23 +35,31 @@ dependencies = [
     "scikit-learn>=1.0",
     "sentence-transformers>=2.2",
     "sympy>=1.12",
-    "streamlit>=1.31.0",
-    "streamlit-agraph>=0.0.45",
     "pandas>=2.0.0"
 ]
 
 [project.optional-dependencies]
+dashboard = [
+    "streamlit>=1.31.0",
+    "streamlit-agraph>=0.0.45",
+]
 api = [
     "fastapi>=0.109.0",
     "uvicorn[standard]>=0.27.0",
-    "pydantic>=2.0"
+    "pydantic>=2.0",
 ]
 dev = [
     "pytest>=7.0",
     "black>=22.0",
-    "flake8>=4.0",
-    "httpx>=0.25.0"
+    "ruff>=0.3.0",
+    "httpx>=0.25.0",
 ]
+
+[project.urls]
+Homepage      = "https://fuaflow.com/triadic/"
+Repository    = "https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine"
+Documentation = "https://api.fuaflow.com/docs"
+Paper         = "https://doi.org/10.5281/zenodo.18748671"
 
 [tool.setuptools.packages.find]
 where = ["src"]
