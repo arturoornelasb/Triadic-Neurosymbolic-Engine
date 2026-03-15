@@ -7,7 +7,7 @@ import logging
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
-def run_real_world_validation():
+def test_real_world_validation():
     print("=== Neurosymbolic Engine: Real-World Pragmative Validation ===")
     
     # 1. LATENT EXTRACTION (BUSS)
@@ -84,4 +84,4 @@ def run_real_world_validation():
     print("Remaining stable relations:", pruned_kg.edges())
 
 if __name__ == "__main__":
-    run_real_world_validation()
+    test_real_world_validation()
