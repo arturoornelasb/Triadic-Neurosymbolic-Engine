@@ -16,3 +16,6 @@ paper/*.bbl
 paper/*.blg
 playground/
 streamlit_log.txt
+
+# Claude Code local settings
+.claude/
