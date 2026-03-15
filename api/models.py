@@ -78,7 +78,7 @@ class SearchResponse(BaseModel):
 
 class HealthResponse(BaseModel):
     engine: str = "Triadic Neurosymbolic Engine"
-    version: str = "0.1.0"
+    version: str = "0.2.0"
     status: str = "operational"
     default_model: str
     concepts_loaded: int

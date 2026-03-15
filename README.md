@@ -240,7 +240,7 @@ make paper   # requires pdflatex + bibtex
 | Producción propia (no competidora) | ✅ Sin restricción |
 | Ofrecer una API de búsqueda semántica neurosimbólica a terceros | ❌ Requiere licencia comercial |
 
-**Change Date:** 2030-01-01 → convierte automáticamente a Apache 2.0.
+**Change Date:** 2040-01-01 → convierte automáticamente a Apache 2.0.
 
 Para uso comercial como servicio de API, usa el [Triadic Cloud API](https://fuaflow.com/triadic/) o contacta: arturoornelas62@gmail.com
 

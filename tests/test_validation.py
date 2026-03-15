@@ -24,6 +24,8 @@ def run_real_world_validation():
     
     extractor = BipolarExtractor(n_components=2)
     axes = extractor.fit(corpus)
+    assert axes is not None, "fit() should return axes"
+    assert axes.shape[0] > 0, "Should extract at least one semantic axis"
     print(f"Extracted {axes.shape[0]} latent semantic axes with length {axes.shape[1]}.")
     
     # Let's project some words to get their "continuous" values
@@ -48,6 +50,7 @@ def run_real_world_validation():
         target_a=C_Woman
     )
     
+    assert prediction_result is not None, "analogy_prediction() should return a result"
     if prediction_result.is_valid:
         print(f"Success! The predicted integer for Queen is: {prediction_result.output_value}")
     else:
@@ -75,6 +78,7 @@ def run_real_world_validation():
     pruned_kg, pruning_frac = regularizer.optimize_entropy(kg, target_entropy=target)
     
     final_entropy = regularizer.calculate_entropy(pruned_kg)
+    assert final_entropy <= initial_entropy, "Regularization should not increase entropy"
     print(f"Final Graph Entropy: {final_entropy:.4f}")
     print(f"Edges pruned: {kg.number_of_edges() - pruned_kg.number_of_edges()}")
     print("Remaining stable relations:", pruned_kg.edges())

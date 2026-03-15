@@ -30,12 +30,11 @@ jobs:
 
       - name: Lint with ruff
         run: |
-          ruff check src/ --select E9,F63,F7,F82
-          ruff check src/ --exit-zero
+          ruff check src/ tests/
 
       - name: Run tests
         run: |
-          python -m pytest tests/ -v --tb=short
+          pytest tests/ -v
 
   build:
     name: Build wheel & sdist

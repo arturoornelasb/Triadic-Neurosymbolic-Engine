@@ -61,7 +61,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Triadic Neurosymbolic Engine API",
     description="Deterministic algebraic framework for neurosymbolic validation, semantic projection, and AI model auditing.",
-    version="0.1.0",
+    version="0.2.0",
     license_info={"name": "CC BY-NC 4.0", "url": "https://creativecommons.org/licenses/by-nc/4.0/"},
     lifespan=lifespan,
 )

@@ -19,7 +19,9 @@ def test_anomaly_detection():
     
     # 3. Scan
     anomalies = detector.scan(df)
-    
+    assert anomalies is not None, "scan() should return a list"
+    assert isinstance(anomalies, list), "scan() should return a list"
+
     print(f"\n--- Results: {len(anomalies)} anomalies found ---\n")
     
     for a in anomalies:
@@ -31,6 +33,7 @@ def test_anomaly_detection():
     
     # Verify we caught the planted anomalies
     flagged_rows = {a.row_index for a in anomalies}
+    assert len(flagged_rows) > 0, "Should detect at least one anomaly in sample data"
     print(f"Flagged row indices: {flagged_rows}")
     print("=== Test Complete ===")
 

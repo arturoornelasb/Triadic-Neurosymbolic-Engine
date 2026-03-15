@@ -21,6 +21,8 @@ def test_quantum_bridge():
     print("\n[Continuous Space $\\mathbb{R}^n$]")
     encoder = ContinuousEncoder()
     embeddings = encoder.encode(words)
+    assert embeddings is not None, "encode() should return embeddings"
+    assert embeddings.shape[0] == len(words), f"Expected {len(words)} embeddings, got {embeddings.shape[0]}"
     print(f"Extracted dense embeddings. Shape: {embeddings.shape}")
     
     # 3. Discretize via LSH and Prime Factorization
@@ -28,7 +30,8 @@ def test_quantum_bridge():
     # We use a small number of bits (e.g. 4) so that embeddings are forced into fewer semantic buckets
     mapper = DiscreteMapper(n_bits=4, seed=42)
     prime_map = mapper.fit_transform(words, embeddings)
-    
+    assert len(prime_map) == len(words), f"Expected {len(words)} prime mappings, got {len(prime_map)}"
+
     print("\nAssigned Prime Factors by Semantic Clusters:")
     for word, p_factor in prime_map.items():
         print(f" - {word}: {p_factor}")
