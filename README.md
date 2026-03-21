@@ -31,7 +31,6 @@ The Triadic Engine tells you *"King = 2×3×5 and Queen = 2×5×7. They share {2
 ## Install
 
 ```bash
-# Local research / open-source (CC BY-NC 4.0)
 pip install neurosym
 
 # Optional extras
@@ -204,12 +203,15 @@ make paper   # requires pdflatex + bibtex
 
 ```bibtex
 @software{ornelas2026triadic,
-  author       = {Ornelas Brand, J. Arturo},
+  author       = {Ornelas Brand, José Arturo},
   title        = {Triadic Neurosymbolic Engine: Prime Factorization as a
                   Neurosymbolic Bridge for Deterministic Verification},
   year         = 2026,
+  month        = feb,
+  publisher    = {Zenodo},
+  version      = {0.2.0},
   doi          = {10.5281/zenodo.18748671},
-  url          = {https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine}
+  url          = {https://doi.org/10.5281/zenodo.18748671}
 }
 ```
 

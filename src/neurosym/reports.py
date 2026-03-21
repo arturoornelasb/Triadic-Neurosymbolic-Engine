@@ -266,7 +266,7 @@ class ReportGenerator:
     <p class="subtitle">Generated {self.timestamp} · Triadic Neurosymbolic Engine v0.2.0</p>
     {sections_joined}
     <div class="footer">
-        <p>© 2025 José Arturo Ornelas Brand · Triadic Neurosymbolic Engine</p>
+        <p>© 2026 José Arturo Ornelas Brand · Triadic Neurosymbolic Engine</p>
         <p>Deterministic Algebraic Framework for AI Interpretability</p>
     </div>
 </body>

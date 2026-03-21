@@ -4,14 +4,13 @@
     "description": "A deterministic algebraic framework that projects continuous neural embeddings into composite prime integers via Locality Sensitive Hashing, enabling exact logical operations (subsumption, composition, gap analysis) impossible under cosine similarity. Achieves 28.4x faster pairwise verification with fully transparent, interpretable results.",
     "creators": [
         {
-            "name": "Ornelas Brand, J. Arturo",
-            "affiliation": "Independent Researcher",
-            "orcid": ""
+            "name": "Ornelas Brand, José Arturo",
+            "affiliation": "Independent Researcher"
         }
     ],
     "upload_type": "software",
     "access_right": "open",
-    "license": "cc-by-nc-4.0",
+    "license": "BUSL-1.1",
     "keywords": [
         "neurosymbolic AI",
         "prime factorization",
@@ -24,9 +23,9 @@
     ],
     "related_identifiers": [
         {
-            "identifier": "https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine",
-            "relation": "isSupplementTo",
-            "scheme": "url"
+            "identifier": "https://doi.org/10.5281/zenodo.18748671",
+            "relation": "isIdenticalTo",
+            "scheme": "doi"
         }
     ],
     "language": "eng"
