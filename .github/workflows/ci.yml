@@ -59,7 +59,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: dist-neurosym
+          name: dist-triadic-engine
           path: dist/
 
   publish:
@@ -75,11 +75,11 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          name: dist-neurosym
+          name: dist-triadic-engine
           path: dist/
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         # Configure Trusted Publishing at PyPI:
-        # https://pypi.org/manage/project/neurosym/settings/publishing/
+        # https://pypi.org/manage/project/triadic-engine/settings/publishing/
         # Owner: arturoornelasb  Repo: Triadic-Neurosymbolic-Engine  Branch: main  Env: pypi

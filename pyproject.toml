@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "neurosym"
+name = "triadic-engine"
 version = "0.2.0"
-description = "Deterministic algebraic semantic search via prime factorization — 28x faster than cosine, fully explainable"
+description = "Deterministic AI auditing and semantic validation via prime factorization — 28x faster than cosine, fully explainable"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "BUSL-1.1" }
@@ -14,8 +14,8 @@ authors = [
 ]
 keywords = [
     "neurosymbolic", "semantic-search", "prime-factorization",
-    "nlp", "embeddings", "explainable-ai", "knowledge-graph",
-    "triadic", "deterministic", "algebraic"
+    "ai-auditing", "embeddings", "explainable-ai", "knowledge-graph",
+    "triadic", "deterministic", "model-evaluation"
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -57,9 +57,7 @@ dev = [
 ]
 
 [project.urls]
-Homepage      = "https://fuaflow.com/triadic/"
 Repository    = "https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine"
-Documentation = "https://api.fuaflow.com/docs"
 Paper         = "https://doi.org/10.5281/zenodo.18748671"
 
 [tool.setuptools.packages.find]

@@ -2,6 +2,7 @@
 
 [![License: BUSL-1.1](https://img.shields.io/badge/License-BUSL--1.1-blue.svg)](https://mariadb.com/bsl11/)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![PyPI](https://img.shields.io/pypi/v/triadic-engine.svg)](https://pypi.org/project/triadic-engine/)
 [![CI](https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine/actions/workflows/ci.yml/badge.svg)](https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine/actions)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18748671.svg)](https://doi.org/10.5281/zenodo.18748671)
 
@@ -30,11 +31,11 @@ The Triadic Engine tells you *"King = 2×3×5 and Queen = 2×5×7. They share {2
 ## Install
 
 ```bash
-pip install git+https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine.git
+pip install triadic-engine
 
 # With optional extras
-pip install "neurosym[dashboard] @ git+https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine.git"
-pip install "neurosym[api] @ git+https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine.git"
+pip install "triadic-engine[dashboard]"  # Streamlit dashboard
+pip install "triadic-engine[api]"        # FastAPI server
 ```
 
 ---
@@ -161,7 +162,7 @@ python scripts/benchmark_pca.py
 
 ## Triadic Cloud API
 
-The open-source engine runs locally. For production workloads without GPU setup, the **[Triadic Cloud API](https://fuaflow.com/triadic/)** is the hosted version:
+The open-source engine runs locally. For production workloads without GPU setup, a hosted Cloud API is planned:
 
 ```python
 # pip install neurosym-cloud
