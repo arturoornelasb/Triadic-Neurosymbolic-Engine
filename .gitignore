@@ -1,22 +1,45 @@
+# Python
 venv/
 .venv/
 __pycache__/
 *.pyc
-.ipynb_checkpoints/
+*.pyo
 *.egg-info/
 dist/
 build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data / runtime artifacts
 *.db
 *.sqlite
 .env
+streamlit_log.txt
+audit_report.csv
+
+# LaTeX (also see paper/.gitignore)
 paper/*.aux
 paper/*.log
 paper/*.out
 paper/*.bbl
 paper/*.blg
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Playground (experimental, not part of package)
 playground/
-streamlit_log.txt
-audit_report.csv
+
+# IDE
+.idea/
+.vscode/
 
 # Claude Code local settings
 .claude/
