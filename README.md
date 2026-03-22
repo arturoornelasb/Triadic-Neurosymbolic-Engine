@@ -59,11 +59,19 @@ embeddings = encoder.encode(concepts)
 prime_map = mapper.fit_transform(concepts, embeddings)
 
 validator = DiscreteValidator()
+
 print(validator.subsumes(prime_map["King"], prime_map["Queen"]))
-# → {"subsumes": False, "shared": [2, 5], "a_only": [3], "b_only": [7]}
+# → False (King does not contain ALL features of Queen)
 
 print(validator.explain_gap(prime_map["King"], prime_map["Queen"]))
-# → "King and Queen share {Royalty}. King has {Male}. Queen has {Female}."
+# → {"shared": 10, "only_in_a": 3, "only_in_b": 7, "a_contains_b": False, "b_contains_a": False}
+
+print(validator.compose(prime_map["King"], prime_map["Queen"]))
+# → LCM of both — a new integer containing all features of King AND Queen
+
+# Analogy: King:Man :: Queen:?
+result = validator.analogy_prediction(prime_map["King"], prime_map["Man"], prime_map["Queen"])
+print(result.output_value)  # → predicted integer for "Woman"
 ```
 
 ---
@@ -105,7 +113,7 @@ Each concept becomes a single integer whose **prime factors are its semantic fea
 | `neurosym.graph` | Scalable graph builder with inverted prime index (avoids O(N²)) |
 | `neurosym.storage` | SQLite persistence for prime indices and audit results |
 | `neurosym.reports` | Exportable reports in HTML, JSON, and CSV formats |
-| `neurosym.ingest` | Database ingestion pipeline with batch processing |
+| `neurosym.ingest` | DataFrame ingestion with inverted prime index and semantic search |
 | `neurosym.anomaly` | Multiplicative anomaly detection for tabular data |
 
 ---
@@ -127,13 +135,32 @@ Each concept becomes a single integer whose **prime factors are its semantic fea
 ## Interactive Dashboard
 
 ```bash
-pip install "neurosym[dashboard]"
+pip install "triadic-engine[dashboard]"
 streamlit run app.py
 ```
 
-Five tabs: **Ingestion**, **Semantic Graph**, **Logic & Search**, **AI Auditor**, **Benchmarks**
+Six tabs: **Ingestion & Encoding**, **Semantic Graph**, **Logic & Search**, **AI Auditor**, **Anomaly Detection**, **Benchmarks**
 
 The AI Auditor compares how different embedding models structure the same concepts using topological shortest-path differencing — finding exact structural discrepancies between models.
+
+---
+
+## REST API
+
+```bash
+pip install "triadic-engine[api]"
+uvicorn api.server:app --host 0.0.0.0 --port 8000
+```
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/health` | GET | Engine status and loaded concepts count |
+| `/encode` | POST | Encode concepts into composite prime integers |
+| `/audit` | POST | Compare two embedding models topologically |
+| `/search` | POST | GCD-based semantic search over indexed concepts |
+| `/report` | GET | Export engine state as HTML, JSON, or CSV |
+
+Interactive docs at `http://localhost:8000/docs` (Swagger UI).
 
 ---
 
@@ -141,7 +168,7 @@ The AI Auditor compares how different embedding models structure the same concep
 
 ```bash
 # Massive topological audit (model vs model)
-python scripts/triadic_auditor.py --input examples/data/wordnet_2k.csv --output reports/audit.csv
+python scripts/triadic_auditor.py --input examples/data/wordnet_2k.csv --col concept --output reports/audit.csv
 
 # PCA vs Random vs Consensus vs Contrastive benchmark
 python scripts/benchmark_pca.py
@@ -160,33 +187,11 @@ python scripts/benchmark_pca.py
 
 ---
 
-## Triadic Cloud API
-
-The open-source engine runs locally. For production workloads without GPU setup, a hosted Cloud API is planned:
-
-```python
-# pip install neurosym-cloud
-from neurosym_cloud import TriadicClient
-
-client = TriadicClient(api_key="tne-...")
-result = client.encode(["King", "Queen"])
-print(client.subsumes("King", "Queen"))
-```
-
-| Tier | Price | Requests/day |
-|------|-------|-------------|
-| Community | Free | 100 |
-| Pro | $29/mo | 5,000 |
-| Enterprise | $299/mo | Unlimited + SLA |
-
----
-
 ## Academic Paper
 
 Full paper with 9 experiments: [`paper/`](paper/)
 
 ```bash
-cd paper
 make paper   # requires pdflatex + bibtex
 ```
 
@@ -214,11 +219,13 @@ make paper   # requires pdflatex + bibtex
 
 ```
 ├── src/neurosym/          ← Core Python package (pip installable)
-├── paper/                 ← Academic paper (LaTeX, 11 pages)
+├── api/                   ← FastAPI REST server
 ├── app.py                 ← Streamlit interactive dashboard
+├── paper/                 ← Academic paper (LaTeX, 11 pages)
 ├── scripts/               ← CLI auditing & benchmark tools
 ├── tests/                 ← Test suite
-├── examples/              ← Usage examples & sample data
+├── notebooks/             ← Reproducibility demo (Jupyter)
+├── examples/              ← Sample datasets (WordNet, e-commerce)
 └── pyproject.toml         ← Package metadata & dependencies
 ```
 
@@ -228,15 +235,15 @@ make paper   # requires pdflatex + bibtex
 
 **Business Source License 1.1 (BUSL-1.1)**
 
-| | Permitido |
+| | Allowed |
 |---|---|
-| Uso académico / investigación / proyectos personales | ✅ Sin restricción |
-| Self-hosted / tooling interno | ✅ Sin restricción |
-| Producción propia (no competidora) | ✅ Sin restricción |
-| Ofrecer una API de búsqueda semántica neurosimbólica a terceros | ❌ Requiere licencia comercial |
+| Academic / research / personal projects | ✅ Unrestricted |
+| Self-hosted / internal tooling | ✅ Unrestricted |
+| Production use (non-competing) | ✅ Unrestricted |
+| Offering a competing neurosymbolic validation API to third parties | ❌ Requires commercial license |
 
-**Change Date:** 2030-03-21 → convierte automáticamente a AGPL-3.0.
+**Change Date:** 2030-03-21 — auto-converts to AGPL-3.0.
 
-Para uso comercial como servicio de API, contacta: arturoornelas62@gmail.com
+For commercial API licensing, contact: arturoornelas62@gmail.com
 
 © 2026 José Arturo Ornelas Brand
