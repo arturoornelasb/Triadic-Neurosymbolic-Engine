@@ -4,7 +4,7 @@
     "description": "A deterministic algebraic framework that projects continuous neural embeddings into composite prime integers via Locality Sensitive Hashing, enabling exact logical operations (subsumption, composition, gap analysis) impossible under cosine similarity. Achieves 28.4x faster pairwise verification with fully transparent, interpretable results.",
     "creators": [
         {
-            "name": "Ornelas Brand, José Arturo",
+            "name": "Ornelas Brand, J. Arturo",
             "affiliation": "Independent Researcher",
             "orcid": "",
             "email": "arturoornelas62@gmail.com"

@@ -173,7 +173,7 @@ with st.sidebar:
     st.markdown("#### 🔗 Links")
     st.markdown("[📄 GitHub Repository](https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine)")
     st.markdown("[📝 Academic Paper](https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine/tree/main/paper)")
-    st.caption("© 2026 José Arturo Ornelas Brand")
+    st.caption("© 2026 J. Arturo Ornelas Brand")
 
 # ─────────────────────────────────────────────────────────────
 # Header

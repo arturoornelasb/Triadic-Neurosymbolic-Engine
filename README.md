@@ -201,7 +201,7 @@ make paper   # requires pdflatex + bibtex
 
 ```bibtex
 @software{ornelas2026triadic,
-  author       = {Ornelas Brand, José Arturo},
+  author       = {Ornelas Brand, J. Arturo},
   title        = {Triadic Neurosymbolic Engine: Prime Factorization as a
                   Neurosymbolic Bridge for Deterministic Verification},
   year         = 2026,
@@ -249,4 +249,4 @@ Companies: see [COMMERCIAL.md](COMMERCIAL.md) for the consortium participation m
 
 Contact: arturoornelas62@gmail.com
 
-© 2026 José Arturo Ornelas Brand
+© 2026 J. Arturo Ornelas Brand
