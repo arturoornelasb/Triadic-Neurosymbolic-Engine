@@ -4,8 +4,10 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{booktabs}
-\usepackage{hyperref}
 \usepackage{xcolor}
+\usepackage[breaklinks=true]{hyperref}
+\usepackage{url}
+\def\UrlBreaks{\do\/\do-\do_\do.\do=\do?\do&\do\#}
 \usepackage[margin=0.85in]{geometry}
 \usepackage{enumitem}
 \usepackage{caption}
@@ -556,9 +558,12 @@ The algebraic framework introduced here---post-hoc projection of pre-trained emb
 The methods described in this paper and its companions are available as publicly released Python packages:
 
 \begin{itemize}[nosep, leftmargin=*]
-    \item \textbf{triadic-engine} --- Core algebraic framework: encoding, validation, subsumption, auditing, and semantic search. Install via \texttt{pip install triadic-engine}. Repository: \url{https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine}
-    \item \textbf{triadic-head} --- Drop-in triadic projection head for any HuggingFace transformer. Install via \texttt{pip install triadic-head}. Repository: \url{https://github.com/arturoornelasb/triadic-microgpt/tree/master/triadic-head}
-    \item \textbf{reptimeline} --- Discrete representation lifecycle tracker. Install via \texttt{pip install reptimeline}. Repository: \url{https://github.com/arturoornelasb/reptimeline}
+    \item \textbf{triadic-engine} --- Core algebraic framework: encoding, validation, subsumption, auditing, and semantic search. Install via \texttt{pip install triadic-engine}.\\
+    \url{https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine}
+    \item \textbf{triadic-head} --- Drop-in triadic projection head for any HuggingFace transformer. Install via \texttt{pip install triadic-head}.\\
+    \url{https://github.com/arturoornelasb/triadic-microgpt/tree/master/triadic-head}
+    \item \textbf{reptimeline} --- Discrete representation lifecycle tracker. Install via \texttt{pip install reptimeline}.\\
+    \url{https://github.com/arturoornelasb/reptimeline}
 \end{itemize}
 
 \noindent All packages are released under the Business Source License~1.1 (BUSL-1.1), free for individuals, academic, and non-profit use. Commercial production use requires a participation agreement (see \texttt{COMMERCIAL.md} in each repository).
