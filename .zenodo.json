@@ -5,7 +5,9 @@
     "creators": [
         {
             "name": "Ornelas Brand, José Arturo",
-            "affiliation": "Independent Researcher"
+            "affiliation": "Independent Researcher",
+            "orcid": "",
+            "email": "arturoornelas62@gmail.com"
         }
     ],
     "upload_type": "software",
