@@ -68,7 +68,7 @@ We introduce a \textbf{lightweight bridging mechanism}: project continuous embed
     \item A \textbf{composite prime encoding} via LSH where each prime factor represents a semantic feature dimension.\vspace{1pt}
     \item Three \textbf{algebraic operations} (subsumption, composition, gap analysis) provably impossible under cosine similarity.\vspace{1pt}
     \item A series of nine experiments with \textbf{real data and honest limitations}.\vspace{1pt}
-    \item A complete open-source implementation.
+    \item A complete, publicly available implementation (BUSL-1.1).
 \end{enumerate}
 
 \begin{figure}[ht]
@@ -541,16 +541,28 @@ This work contributes a tool to the neurosymbolic toolkit---not replacing contin
     \item \textbf{EU AI Act auditing:} Apply the topological auditor to production LLMs for regulatory compliance documentation.
 \end{itemize}
 
+\subsection{Companion Work}
+
+This paper is the first in a series of four publications on triadic neurosymbolic methods.
+The algebraic framework introduced here---post-hoc projection of pre-trained embeddings into composite prime integers---serves as the foundation for three companion papers that extend it in complementary directions:
+
+\begin{enumerate}[nosep, leftmargin=*]
+    \item \textbf{End-to-end learning} (Ornelas Brand, 2026b). A 40M-parameter GPT learns composite prime signatures alongside language modeling via a linear triadic projection head, achieving 98\% analogy verification and 100\% signature uniqueness at near-zero language cost (+1.7\% perplexity). This moves the triadic framework from post-hoc analysis to native model capability.
+    \item \textbf{Representation observability} (Ornelas Brand, 2026c). \texttt{reptimeline} provides tooling for tracking how discrete representations evolve during training---lifecycle events (birth, death, stabilization), phase transitions, bottom-up ontology discovery, and causal intervention verification. Applied to MNIST autoencoders, Pythia-70M sparse autoencoders, and the triadic GPT above.
+    \item \textbf{Algebraic duality structure} (Ornelas Brand, 2026d). Proposes 14 fundamental dualities across 6 algebraic layers, validated through domain analysis and neurosymbolic learning. Extends the prime encoding with an ontological structure grounded in classical duality theory. \emph{In preparation.}
+\end{enumerate}
+
 \subsection{Software Availability}
 
-The methods described in this paper are available as open-source Python packages:
+The methods described in this paper and its companions are available as publicly released Python packages:
 
 \begin{itemize}[nosep, leftmargin=*]
-    \item \textbf{triadic-engine} --- The core algebraic framework for encoding, validation, subsumption, auditing, and semantic search. Install via \texttt{pip install triadic-engine}. Repository: \url{https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine}
-    \item \textbf{reptimeline} --- A companion tool for tracking how discrete representations evolve during training: lifecycle events (birth, death, stabilization), phase transitions, bottom-up ontology discovery, and causal intervention verification. Install via \texttt{pip install reptimeline}. Repository: \url{https://github.com/arturoornelasb/reptimeline}
+    \item \textbf{triadic-engine} --- Core algebraic framework: encoding, validation, subsumption, auditing, and semantic search. Install via \texttt{pip install triadic-engine}. Repository: \url{https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine}
+    \item \textbf{triadic-head} --- Drop-in triadic projection head for any HuggingFace transformer. Install via \texttt{pip install triadic-head}. Repository: \url{https://github.com/arturoornelasb/triadic-microgpt/tree/master/triadic-head}
+    \item \textbf{reptimeline} --- Discrete representation lifecycle tracker. Install via \texttt{pip install reptimeline}. Repository: \url{https://github.com/arturoornelasb/reptimeline}
 \end{itemize}
 
-\noindent Both packages are released under the Business Source License~1.1 (BUSL-1.1), free for research and non-commercial use.
+\noindent All packages are released under the Business Source License~1.1 (BUSL-1.1), free for individuals, academic, and non-profit use. Commercial production use requires a participation agreement (see \texttt{COMMERCIAL.md} in each repository).
 
 \bibliographystyle{plain}
 \bibliography{src/references}

@@ -68,7 +68,7 @@ The API server (`api/server.py`) only exposes 5 of the engine's core operations:
 
 ### Cloud API (triadic-cloud)
 
-The paper (Section 7.2) describes `triadic-engine` as open-source, but a hosted API is the monetization path:
+The engine library is BUSL-1.1 (source-available, not open-source), and a hosted API is the monetization path:
 
 - [ ] Deploy API behind gateway (e.g., AWS API Gateway, Cloudflare Workers)
 - [ ] Tiered API key system (free/pro/enterprise)

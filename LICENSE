@@ -6,12 +6,15 @@ Change Date:       2030-03-21
 Change License:    GNU Affero General Public License v3.0
 
 Additional Use Grant:
-  You may make production use of the Licensed Work, provided that such
-  production use does not consist of offering a competing neurosymbolic
-  validation or semantic projection API service to third parties.
+  Production use of the Licensed Work is permitted without a commercial
+  license for: (a) individual persons, (b) academic and research
+  institutions, and (c) non-profit organizations.
 
-  Academic use, personal projects, internal tooling, and self-hosted
-  deployments are permitted without restriction.
+  All other production use — including by for-profit companies,
+  government contractors, and commercial entities — requires a
+  commercial participation agreement with the Licensor.
+
+  All users are subject to the contribution terms in TERMS.md.
 
 Terms:
   The Licensor hereby grants you the right to copy, modify, create
