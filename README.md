@@ -4,7 +4,8 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![PyPI](https://img.shields.io/pypi/v/triadic-engine.svg)](https://pypi.org/project/triadic-engine/)
 [![CI](https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine/actions/workflows/ci.yml/badge.svg)](https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine/actions)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18748671.svg)](https://doi.org/10.5281/zenodo.18748671)
+[![DOI Software](https://zenodo.org/badge/DOI/10.5281/zenodo.18748671.svg)](https://doi.org/10.5281/zenodo.18748671)
+[![DOI Paper](https://zenodo.org/badge/DOI/10.5281/zenodo.19205805.svg)](https://doi.org/10.5281/zenodo.19205805)
 
 **A deterministic algebraic framework for neurosymbolic validation, semantic projection, and AI model auditing.**
 
@@ -200,16 +201,15 @@ make paper   # requires pdflatex + bibtex
 ## Citation
 
 ```bibtex
-@software{ornelas2026triadic,
+@article{ornelas2026prime,
   author       = {Ornelas Brand, J. Arturo},
-  title        = {Triadic Neurosymbolic Engine: Prime Factorization as a
-                  Neurosymbolic Bridge for Deterministic Verification},
+  title        = {Prime Factorization as a Neurosymbolic Bridge: Projecting
+                  Continuous Embeddings into Discrete Algebraic Space
+                  for Deterministic Verification},
   year         = 2026,
-  month        = feb,
-  publisher    = {Zenodo},
-  version      = {0.2.0},
-  doi          = {10.5281/zenodo.18748671},
-  url          = {https://doi.org/10.5281/zenodo.18748671}
+  month        = mar,
+  doi          = {10.5281/zenodo.19205805},
+  url          = {https://doi.org/10.5281/zenodo.19205805}
 }
 ```
 
