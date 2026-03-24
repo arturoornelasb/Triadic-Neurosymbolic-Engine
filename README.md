@@ -237,13 +237,16 @@ make paper   # requires pdflatex + bibtex
 
 | | Allowed |
 |---|---|
-| Academic / research / personal projects | ✅ Unrestricted |
-| Self-hosted / internal tooling | ✅ Unrestricted |
-| Production use (non-competing) | ✅ Unrestricted |
-| Offering a competing neurosymbolic validation API to third parties | ❌ Requires commercial license |
+| Individuals / personal projects / freelancing | ✅ Free |
+| Academic / research institutions | ✅ Free |
+| Non-profit organizations | ✅ Free |
+| For-profit companies (production use) | ❌ Requires participation agreement |
+
+All users must contribute improvements back. See [TERMS.md](TERMS.md).
+Companies: see [COMMERCIAL.md](COMMERCIAL.md) for the consortium participation model.
 
 **Change Date:** 2030-03-21 — auto-converts to AGPL-3.0.
 
-For commercial API licensing, contact: arturoornelas62@gmail.com
+Contact: arturoornelas62@gmail.com
 
 © 2026 José Arturo Ornelas Brand
