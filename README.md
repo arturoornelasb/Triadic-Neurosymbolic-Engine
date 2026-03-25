@@ -241,6 +241,34 @@ Ornelas Brand, J. A. (2026). Prime Factorization as a Neurosymbolic Bridge: Proj
 
 ---
 
+## Companion Work
+
+This engine is the first in a series of four publications on triadic neurosymbolic methods:
+
+### triadic-microgpt — End-to-End Prime Factorization in a Generative Language Model
+
+A 40M-parameter GPT learns composite prime signatures alongside language modeling, achieving 98% analogy verification and 100% signature uniqueness.
+
+| | DOI |
+|---|---|
+| Paper | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19206545.svg)](https://doi.org/10.5281/zenodo.19206545) |
+| Repository | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19207845.svg)](https://doi.org/10.5281/zenodo.19207845) |
+
+### reptimeline — Tracking Discrete Representation Evolution During Neural Network Training
+
+Tooling for tracking how discrete representations evolve during training — lifecycle events, phase transitions, bottom-up ontology discovery, and causal intervention verification.
+
+| | DOI |
+|---|---|
+| Paper | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19208672.svg)](https://doi.org/10.5281/zenodo.19208672) |
+| Repository | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19208628.svg)](https://doi.org/10.5281/zenodo.19208628) |
+
+### Algebraic Duality Structure *(forthcoming)*
+
+14+ fundamental dualities across 6 algebraic layers, validated through domain analysis and neurosymbolic learning. *In progress.*
+
+---
+
 ## Project Structure
 
 ```
