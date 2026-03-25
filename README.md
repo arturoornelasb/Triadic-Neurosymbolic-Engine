@@ -137,7 +137,7 @@ Each concept becomes a single integer whose **prime factors are its semantic fea
 
 ```bash
 pip install "triadic-engine[dashboard]"
-streamlit run app.py
+triadic-dashboard
 ```
 
 Six tabs: **Ingestion & Encoding**, **Semantic Graph**, **Logic & Search**, **AI Auditor**, **Anomaly Detection**, **Benchmarks**

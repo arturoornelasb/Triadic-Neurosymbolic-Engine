@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "triadic-engine"
-version = "0.2.1"
+version = "0.3.0"
 description = "Deterministic AI auditing and semantic validation via prime factorization — 28.4x faster than cosine, fully explainable"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -56,6 +56,9 @@ dev = [
     "ruff>=0.3.0",
     "httpx>=0.25.0",
 ]
+
+[project.scripts]
+triadic-dashboard = "neurosym.dashboard:main"
 
 [project.urls]
 Repository    = "https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine"
