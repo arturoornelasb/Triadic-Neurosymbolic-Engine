@@ -41,8 +41,19 @@ class ContinuousEncoder(BaseEncoder):
     """
     def __init__(self, model_name: str = 'all-MiniLM-L6-v2'):
         logger.info(f"Loading local embedding model: {model_name}")
+        import os
         from sentence_transformers import SentenceTransformer
-        self.model = SentenceTransformer(model_name)
+        # Suppress tqdm progress bars during model loading to avoid
+        # write errors in environments that redirect stdout (Streamlit, Jupyter)
+        _prev = os.environ.get("TQDM_DISABLE")
+        os.environ["TQDM_DISABLE"] = "1"
+        try:
+            self.model = SentenceTransformer(model_name)
+        finally:
+            if _prev is None:
+                os.environ.pop("TQDM_DISABLE", None)
+            else:
+                os.environ["TQDM_DISABLE"] = _prev
         self._name = model_name
         
     def encode(self, concepts: List[str]) -> np.ndarray:
