@@ -1,8 +1,6 @@
 import time
 import psutil
 import os
-import gc
-import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 import nltk
 from nltk.corpus import wordnet as wn
@@ -77,7 +75,7 @@ def run_benchmark():
     # Simulate finding relationship between vector A and B 50k times
     for _ in range(ITERATIONS):
         # A standard vector logic requires cosine distance calculation
-        sim = cosine_similarity(vec_a, vec_b)[0][0]
+        cosine_similarity(vec_a, vec_b)[0][0]
     t_vec = time.time() - t0
     mem_after_vec = measure_memory()
     mem_used_vec = mem_after_vec - mem_before_vec
@@ -88,7 +86,7 @@ def run_benchmark():
     t0 = time.time()
     for _ in range(ITERATIONS):
         # Triadic Logic: Deterministic arithmetic resolution
-        result = validator.analogy_prediction(prime_a, prime_b, prime_c)
+        validator.analogy_prediction(prime_a, prime_b, prime_c)
     t_tri = time.time() - t0
     mem_after_tri = measure_memory()
     mem_used_tri = mem_after_tri - mem_before_tri

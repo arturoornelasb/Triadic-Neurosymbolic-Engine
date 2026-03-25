@@ -47,12 +47,14 @@ def test_triadic_search_algorithm():
 
     print("\n--- Analogy 1: King : Man :: Queen : [Woman] ---")
     res1 = triadic_search("King", "Man", "Queen")
-    for r in res1[:3]: print(f"{r[0]} (Dist: {r[1]}) - Missing: {r[4]}, Extra: {r[3]}")
+    for r in res1[:3]:
+        print(f"{r[0]} (Dist: {r[1]}) - Missing: {r[4]}, Extra: {r[3]}")
     assert res1[0][0] == "Woman", f"Expected Woman, got {res1[0][0]}"
     
     print("\n--- Analogy 2: Horse : Car :: Fast : [Vehicle] ---")
     res2 = triadic_search("Horse", "Car", "Fast")
-    for r in res2[:3]: print(f"{r[0]} (Dist: {r[1]}) - Missing: {r[4]}, Extra: {r[3]}")
+    for r in res2[:3]:
+        print(f"{r[0]} (Dist: {r[1]}) - Missing: {r[4]}, Extra: {r[3]}")
     assert res2[0][0] == "Vehicle", f"Expected Vehicle, got {res2[0][0]}"
     
     print("\nSUCCESS! Triadic Search algorithm is mathematically sound.")

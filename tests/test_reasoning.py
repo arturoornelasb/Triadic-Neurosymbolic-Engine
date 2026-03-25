@@ -36,7 +36,7 @@ def test_logical_verification():
         # The composed concept should subsume both originals
         assert validator.subsumes(composed, pm["Male"]), "Composed should subsume Male"
         assert validator.subsumes(composed, pm["Royal"]), "Composed should subsume Royal"
-        print(f"  ✅ Composed concept subsumes both Male AND Royal")
+        print("  ✅ Composed concept subsumes both Male AND Royal")
     
     # --- Test 3: Explain Gap ---
     print("\n--- Test 3: Abductive Gap Explanation ---")

@@ -1,4 +1,3 @@
-import numpy as np
 import networkx as nx
 from neurosym._archived.buss import BipolarExtractor
 from neurosym.triadic import DiscreteValidator

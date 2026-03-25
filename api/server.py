@@ -54,6 +54,8 @@ async def lifespan(app: FastAPI):
     engine["graph_builder"] = ScalableGraphBuilder()
     engine["prime_map"] = {}
     engine["model_name"] = "all-MiniLM-L6-v2"
+    engine["lsh_bits"] = 8
+    engine["lsh_seed"] = 42
     yield
     engine.clear()
 
@@ -105,6 +107,8 @@ async def encode_concepts(req: EncodeRequest):
     
     # Update global state
     engine["prime_map"].update(prime_map)
+    engine["lsh_bits"] = req.lsh_bits
+    engine["lsh_seed"] = req.seed
     
     # Rebuild the scalable graph index
     engine["graph_builder"].build_index(engine["prime_map"])
@@ -235,8 +239,8 @@ async def search_concepts(req: SearchRequest):
     
     enc = engine["encoder"]
     val = engine["validator"]
-    mapper = DiscreteMapper(n_bits=8, seed=42)
-    
+    mapper = DiscreteMapper(n_bits=engine["lsh_bits"], seed=engine["lsh_seed"])
+
     q_emb = enc.encode([req.query])
     q_map = mapper.fit_transform([req.query], q_emb)
     q_prime = q_map[req.query]
@@ -287,7 +291,7 @@ async def generate_report(format: str = "html"):
     report.add_encoding_section(
         prime_map=prime_map,
         model=engine.get("model_name", "unknown"),
-        lsh_bits=8,
+        lsh_bits=engine["lsh_bits"],
         factorize_fn=val._prime_factors,
     )
     

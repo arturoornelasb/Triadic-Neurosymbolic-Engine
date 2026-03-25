@@ -165,7 +165,7 @@ class DiscreteMapper:
         - 'contrastive': Trains hyperplanes on known hypernym pairs
     """
     def __init__(self, n_bits: int = 16, seed: int = 42, projection: str = "random",
-                 consensus_seeds: int = 20, consensus_threshold: float = 0.5,
+                 consensus_seeds: int = 20, consensus_threshold: float = 0.7,
                  hypernym_pairs: Optional[List[Tuple[str, str]]] = None):
         self.n_bits = n_bits
         self.seed = seed

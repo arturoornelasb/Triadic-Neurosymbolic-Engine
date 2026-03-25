@@ -200,16 +200,42 @@ make paper   # requires pdflatex + bibtex
 
 ## Citation
 
+### Paper
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19205805.svg)](https://doi.org/10.5281/zenodo.19205805)
+
+Ornelas Brand, J. A. (2026). Triadic Neurosymbolic Engine: Prime Factorization as a Neurosymbolic Bridge: Projecting Continuous Embeddings into Discrete Algebraic Space for Deterministic Verification. Zenodo. https://doi.org/10.5281/zenodo.19205805
+
 ```bibtex
 @article{ornelas2026prime,
   author       = {Ornelas Brand, J. Arturo},
-  title        = {Prime Factorization as a Neurosymbolic Bridge: Projecting
-                  Continuous Embeddings into Discrete Algebraic Space
-                  for Deterministic Verification},
+  title        = {Triadic Neurosymbolic Engine: Prime Factorization as a
+                  Neurosymbolic Bridge: Projecting Continuous Embeddings
+                  into Discrete Algebraic Space for Deterministic Verification},
   year         = 2026,
   month        = mar,
   doi          = {10.5281/zenodo.19205805},
   url          = {https://doi.org/10.5281/zenodo.19205805}
+}
+```
+
+### Repository
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18748671.svg)](https://doi.org/10.5281/zenodo.18748671)
+
+Ornelas Brand, J. A. (2026). Prime Factorization as a Neurosymbolic Bridge: Projecting Continuous Embeddings into Discrete Algebraic Space for Deterministic Verification (Repository) (0.1.0). Zenodo. https://doi.org/10.5281/zenodo.18748671
+
+```bibtex
+@software{ornelas2026triadic,
+  author       = {Ornelas Brand, J. Arturo},
+  title        = {Prime Factorization as a Neurosymbolic Bridge: Projecting
+                  Continuous Embeddings into Discrete Algebraic Space
+                  for Deterministic Verification (Repository)},
+  year         = 2026,
+  month        = feb,
+  version      = {0.1.0},
+  doi          = {10.5281/zenodo.18748671},
+  url          = {https://doi.org/10.5281/zenodo.18748671}
 }
 ```
 
@@ -221,7 +247,7 @@ make paper   # requires pdflatex + bibtex
 ├── src/neurosym/          ← Core Python package (pip installable)
 ├── api/                   ← FastAPI REST server
 ├── app.py                 ← Streamlit interactive dashboard
-├── paper/                 ← Academic paper (LaTeX, 11 pages)
+├── paper/                 ← Academic paper (LaTeX, 12 pages)
 ├── scripts/               ← CLI auditing & benchmark tools
 ├── tests/                 ← Test suite
 ├── notebooks/             ← Reproducibility demo (Jupyter)

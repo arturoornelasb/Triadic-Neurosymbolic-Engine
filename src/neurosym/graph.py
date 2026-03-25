@@ -12,7 +12,6 @@ Complexity: O(N * F * B) where:
 For sparse LSH projections (k=8-16), F ≈ 4-8 and B << N, so this is
 dramatically faster than O(N²) for large datasets.
 """
-import math
 import logging
 import sympy
 from typing import Dict, List, Tuple, Set

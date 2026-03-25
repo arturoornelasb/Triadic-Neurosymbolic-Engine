@@ -28,7 +28,11 @@ VOCAB = [
     "Animal", "Vehicle", "Person", "Food", "Color",
     "Emotion", "Profession", "Element", "Father", "Mother",
 ]
-VOCAB = list(set(VOCAB))
+# sorted() ensures deterministic vocab order across Python runs (PYTHONHASHSEED).
+# Note: Contrastive TP at k=6 ranges 92-100% depending on vocab order because
+# the gradient-free optimizer converges to different local optima. With sorted
+# order the result is deterministic (96.2%). The paper reports 100% from one run.
+VOCAB = sorted(set(VOCAB))
 
 # Ground-truth hypernym pairs
 HYPERNYM_PAIRS = [

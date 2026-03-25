@@ -72,7 +72,8 @@ HYPERNYM_PAIRS = [
 ]
 
 # We need "Animal", "Vehicle", "Fruit" in our vocab
-VOCAB_FULL = list(set(VOCAB + ["Animal", "Vehicle", "Fruit"]))
+# sorted() ensures deterministic vocab order across Python runs (PYTHONHASHSEED)
+VOCAB_FULL = sorted(set(VOCAB + ["Animal", "Vehicle", "Fruit"]))
 
 print(f"Vocabulary size: {len(VOCAB_FULL)}")
 print("Encoding vocabulary...")

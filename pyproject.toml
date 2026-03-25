@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "triadic-engine"
 version = "0.2.0"
-description = "Deterministic AI auditing and semantic validation via prime factorization — 28x faster than cosine, fully explainable"
+description = "Deterministic AI auditing and semantic validation via prime factorization — 28.4x faster than cosine, fully explainable"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "BUSL-1.1" }
@@ -59,7 +59,7 @@ dev = [
 
 [project.urls]
 Repository    = "https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine"
-Paper         = "https://doi.org/10.5281/zenodo.18748671"
+Paper         = "https://doi.org/10.5281/zenodo.19205805"
 
 [tool.setuptools.packages.find]
 where = ["src"]

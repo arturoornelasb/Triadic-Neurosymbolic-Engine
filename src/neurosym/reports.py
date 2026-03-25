@@ -9,7 +9,15 @@ import csv
 import io
 import html as html_mod
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, List
+
+
+def _engine_version() -> str:
+    try:
+        from importlib.metadata import version
+        return version("triadic-engine")
+    except Exception:
+        return "0.2.0"
 
 
 class ReportGenerator:
@@ -80,7 +88,7 @@ class ReportGenerator:
         report = {
             "title": self.title,
             "generated_at": self.timestamp,
-            "engine": "Triadic Neurosymbolic Engine v0.2.0",
+            "engine": f"Triadic Neurosymbolic Engine v{_engine_version()}",
             "sections": self.sections,
         }
         return json.dumps(report, indent=indent, default=str)
@@ -263,7 +271,7 @@ class ReportGenerator:
 </head>
 <body>
     <h1>⚛️ {self.title}</h1>
-    <p class="subtitle">Generated {self.timestamp} · Triadic Neurosymbolic Engine v0.2.0</p>
+    <p class="subtitle">Generated {self.timestamp} · Triadic Neurosymbolic Engine v{_engine_version()}</p>
     {sections_joined}
     <div class="footer">
         <p>© 2026 J. Arturo Ornelas Brand · Triadic Neurosymbolic Engine</p>

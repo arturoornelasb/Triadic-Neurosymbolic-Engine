@@ -1,4 +1,3 @@
-import numpy as np
 import logging
 from neurosym.encoder import ContinuousEncoder, DiscreteMapper
 from neurosym.triadic import DiscreteValidator

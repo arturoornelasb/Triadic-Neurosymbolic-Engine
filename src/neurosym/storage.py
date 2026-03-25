@@ -6,7 +6,7 @@ import sqlite3
 import os
 import csv
 import io
-from typing import Dict, List, Optional
+from typing import Dict, List
 from datetime import datetime, timezone
 
 
