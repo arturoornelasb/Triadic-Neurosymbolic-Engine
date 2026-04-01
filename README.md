@@ -269,6 +269,7 @@ Tooling for tracking how discrete representations evolve during training — lif
 
 | | DOI |
 |---|---|
+| Paper | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19375167.svg)](https://doi.org/10.5281/zenodo.19375167) |
 | Repository | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19374914.svg)](https://doi.org/10.5281/zenodo.19374914) |
 
 ---
