@@ -263,9 +263,13 @@ Tooling for tracking how discrete representations evolve during training — lif
 | Paper | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19208672.svg)](https://doi.org/10.5281/zenodo.19208672) |
 | Repository | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19208628.svg)](https://doi.org/10.5281/zenodo.19208628) |
 
-### Algebraic Duality Structure *(forthcoming)*
+### Triadic Emergent Duality — 14+ Candidate Dualities Across 6 Algebraic Layers
 
-14+ fundamental dualities across 6 algebraic layers, validated through domain analysis and neurosymbolic learning. *In progress.*
+14+ candidate dualities across 6 algebraic layers, evaluated through domain analysis (8 disciplines + 3 negative controls) and neurosymbolic learning (GPT-2 + 72-bit triadic head).
+
+| | DOI |
+|---|---|
+| Repository | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19374914.svg)](https://doi.org/10.5281/zenodo.19374914) |
 
 ---
 

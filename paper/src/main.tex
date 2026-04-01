@@ -31,7 +31,7 @@
 
 \begin{document}
 
-\title{\Large Prime Factorization as a Neurosymbolic Bridge:\\ Projecting Continuous Embeddings into Discrete Algebraic Space\\ for Deterministic Verification}
+\title{\Large Prime Factorization as a Neurosymbolic Bridge:\\ Projecting Continuous Embeddings into Discrete Algebraic Space\\ for Algebraically Deterministic Verification}
 
 \author{J. Arturo Ornelas Brand \\ \textit{Independent Researcher} \\ \texttt{arturoornelas62@gmail.com}}
 \date{March 2026}
@@ -42,7 +42,7 @@
 %  ABSTRACT
 % ============================================================
 \begin{abstract}
-We propose a method for bridging continuous neural embeddings and discrete symbolic reasoning by mapping dense vectors to \emph{composite prime integers} via Locality Sensitive Hashing (LSH), effectively enabling exact set operations on LSH signatures via unique factorization. Each LSH hyperplane is assigned a unique prime; a concept's integer is the product of primes for its active hyperplanes. This encoding yields three algebraic operations \textbf{impossible} under cosine similarity or Hamming distance: (1)~\emph{logical subsumption} via divisibility, (2)~\emph{concept composition} via LCM, and (3)~\emph{abductive gap analysis} via GCD factorization. We benchmark on a 107-word vocabulary across a series of 9~experiments, achieving $28.4\times$ faster pairwise verification than cosine similarity, and provide honest analysis of limitations. Code: \url{https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine}.
+We propose a method for bridging continuous neural embeddings and discrete symbolic reasoning by mapping dense vectors to \emph{composite prime integers} via Locality Sensitive Hashing (LSH), effectively enabling exact set operations on LSH signatures via unique factorization. Each LSH hyperplane is assigned a unique prime; a concept's integer is the product of primes for its active hyperplanes. This encoding yields three algebraic operations \textbf{not expressible as a single symmetric cosine operation}: (1)~\emph{logical subsumption} via divisibility, (2)~\emph{concept composition} via LCM, and (3)~\emph{abductive gap analysis} via GCD factorization. These operations have exact bitwise equivalents; the prime representation's value is its native algebraic interface to declarative systems. We benchmark on a 107-word vocabulary across a series of 10~experiments including held-out evaluation on 67~unseen hypernym pairs, achieving $28.4\times$ faster pairwise verification than cosine similarity, and provide honest analysis of limitations. Code: \url{https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine}.
 \end{abstract}
 
 \smallskip
@@ -67,15 +67,15 @@ We introduce a \textbf{lightweight bridging mechanism}: project continuous embed
 
 \begin{enumerate}[leftmargin=*, nosep]
     \item A \textbf{composite prime encoding} via LSH where each prime factor represents a semantic feature dimension.\vspace{1pt}
-    \item Three \textbf{algebraic operations} (subsumption, composition, gap analysis) provably impossible under cosine similarity.\vspace{1pt}
-    \item A series of nine experiments with \textbf{real data and honest limitations}.\vspace{1pt}
+    \item Three \textbf{algebraic operations} (subsumption, composition, gap analysis) not expressible as single symmetric cosine operations~\cite{weeds2003general,tversky1977features}.\vspace{1pt}
+    \item A series of ten experiments with \textbf{real data and honest limitations}, including held-out evaluation.\vspace{1pt}
     \item A complete, publicly available implementation (BUSL-1.1).
 \end{enumerate}
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.85\columnwidth]{../figures/pipeline.png}
-    \caption{Pipeline overview: Text concepts are encoded into continuous embeddings via a pre-trained sentence transformer, projected through $k$ LSH hyperplanes into binary activation vectors, and then mapped to composite prime integers. The resulting integers support three algebraic operations impossible under cosine similarity.}
+    \caption{Pipeline overview: Text concepts are encoded into continuous embeddings via a pre-trained sentence transformer, projected through $k$ LSH hyperplanes into binary activation vectors, and then mapped to composite prime integers. The resulting integers support three algebraic operations not expressible as single symmetric cosine operations.}
     \label{fig:pipeline}
 \end{figure}
 
@@ -142,7 +142,7 @@ Dog & $\{7, 11, 13, 19\}$ & $7 \times 11 \times 13 \times 19 = 19019$ \\
 
 \subsection{Step 3: Algebraic Verification Operations}
 
-The composite prime representation enables three operations that are \textbf{impossible} under cosine similarity or Hamming distance:
+The composite prime representation enables three operations that are \textbf{not expressible as single symmetric operations} under cosine similarity or Hamming distance. Asymmetric distributional measures address directionality in continuous space~\cite{weeds2003general,kotlerman2010directional,tversky1977features} but yield probabilistic, not deterministic, results. The prime encoding provides exact, deterministic alternatives:
 
 \subsubsection{Operation 1: Logical Subsumption}
 
@@ -223,19 +223,20 @@ We time 50{,}000 pairwise operations (Table~\ref{tab:timing}).
 \centering
 \caption{Computational efficiency: Cosine similarity vs.\ Prime GCD for pairwise relationship verification (50000 operations).}
 \label{tab:timing}
-\begin{tabular}{lccc}
+\begin{tabular}{lcccc}
 \toprule
-Method & Time (s) & Ops/sec & Output Type \\
+Method & Time (s) & Ops/sec & Speedup & Output \\
 \midrule
-Cosine Similarity & 0.2048 & 244,083 & Probabilistic \\
-Prime GCD (ours) & 0.0072 & 6,942,345 & Deterministic \\
-\midrule
-\textbf{Speedup} & \multicolumn{3}{c}{\textbf{28.4$\times$}} \\
+Cosine (naive) & 0.4145 & 120,634 & 1.0$\times$ & Probabilistic \\
+Cosine (pre-normed) & 0.0720 & 694,086 & 5.8$\times$ & Probabilistic \\
+Prime GCD (ours) & 0.0134 & 3,728,311 & 30.9$\times$ & Deterministic \\
 \bottomrule
 \end{tabular}
+\vspace{2pt}
+\small{Note: Pre-normalization eliminates redundant norm computation per pair.}
 \end{table}
 
-\noindent Integer GCD and modulo operate on CPU registers without matrix operations, yielding an \textbf{approximately 28.4$\times$ speedup} over floating-point dot products with normalization.
+\noindent Integer GCD and modulo operate on CPU registers without matrix operations, yielding an \textbf{approximately 30.9$\times$ speedup} over naive cosine similarity and \textbf{5.4$\times$} over pre-normalized cosine. The comparison against pre-normalized vectors is the more relevant baseline, as any production system would cache norms.
 
 \subsection{Experiment 2: Resolution--Collision Tradeoff}
 
@@ -347,7 +348,7 @@ Love & Hate & 7735 & 1105 & 1105 [5, 13, 17] & 7 [7] & 1 [] & \checkmark & $\tim
     \item \textbf{Love $\supseteq$ Hate:} They share $\{5,13,17\}$. Love has one extra factor $\{7\}$.
 \end{itemize}
 
-These decompositions are \textbf{impossible} with cosine similarity, which can only report a single scalar. Whether the specific prime assignments reflect genuine semantic features is a function of the random LSH projection (see Limitations).
+These decompositions are \textbf{not available} from cosine similarity, which can only report a single scalar. Whether the specific prime assignments reflect genuine semantic features is a function of the random LSH projection (see Limitations).
 
 \subsection{Experiment 7: Industrial-Scale Benchmark ($N=20{,}000$)}
 
@@ -460,7 +461,43 @@ $k$ & Method & TP Rate & FP Rate & TP--FP Gap \\
     \item \textbf{PCA} provides a strong unsupervised baseline, achieving $2$--$4\times$ better gaps than random without requiring labeled data.
     \item \textbf{Consensus} (threshold$=0.7$) matches or exceeds PCA at $k\!=\!12$, offering a complementary approach that filters noise through statistical voting.
     \item \textbf{False positive rates decrease} consistently as $k$ increases across all methods, confirming that higher $k$ improves specificity at the cost of sensitivity.
-    \item The contrastive approach uses the \emph{same training pairs for evaluation}---a limitation. The gap between contrastive TP (100\%) and random TP (42.7\%) at $k\!=\!6$ sets an upper bound on what supervised projection can achieve.
+    \item The contrastive approach uses the \emph{same training pairs for evaluation}---a limitation addressed in Experiment~10.
+\end{itemize}
+
+\subsection{Experiment 10: Held-Out Subsumption Evaluation}
+
+To address the train/test overlap in Experiment~9, we evaluate on 67 completely held-out hypernym pairs spanning 14 categories (10 categories \emph{not} in the 11-pair training set) plus 32 unrelated pairs as negatives. Results for the three non-consensus projection methods:
+
+\begin{table}[ht]
+\centering
+\caption{Held-out subsumption evaluation. 67 hypernym pairs (14 categories, 10 unseen) $+$ 32 unrelated negatives. FPR\textsubscript{theo}$=(3/4)^k$.}
+\label{tab:heldout}
+\begin{tabular}{clcccc}
+\toprule
+$k$ & Method & Precision & Recall & F1 & FPR \\
+\midrule
+8  & Random      & 0.750 & 0.269 & 0.396 & 0.188 \\
+8  & PCA         & \textbf{0.943} & \textbf{0.493} & \textbf{0.647} & 0.062 \\
+8  & Contrastive & 0.812 & 0.388 & 0.525 & 0.188 \\
+\midrule
+12 & Random      & 0.700 & 0.104 & 0.182 & 0.094 \\
+12 & PCA         & \textbf{1.000} & \textbf{0.284} & \textbf{0.442} & \textbf{0.000} \\
+12 & Contrastive & 1.000 & 0.119 & 0.213 & 0.000 \\
+\midrule
+16 & Random      & 0.500 & 0.045 & 0.082 & 0.094 \\
+16 & PCA         & \textbf{1.000} & 0.134 & 0.237 & \textbf{0.000} \\
+16 & Contrastive & 1.000 & \textbf{0.149} & \textbf{0.260} & 0.000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Key findings:}
+\begin{itemize}[nosep, leftmargin=*]
+    \item \textbf{PCA at $k\!=\!8$} achieves the best held-out performance: F1$=0.647$, precision$=0.943$. Nearly half of \emph{unseen} hypernym pairs are detected with very few false positives.
+    \item \textbf{PCA at $k \geq 12$} achieves perfect precision (zero false positives on 32 negatives) but recall drops to $0.28$ and below---the precision--recall tradeoff from Experiment~2 reappears.
+    \item \textbf{Contrastive overfitting:} Despite optimizing on training pairs, contrastive does \emph{not} outperform PCA on held-out data (F1$=0.525$ vs.\ $0.647$ at $k\!=\!8$). The gradient-free optimization overfits to the small training set.
+    \item \textbf{FPR below theoretical:} PCA's observed FPR (0.062 at $k\!=\!8$) is $0.62\times$ the random baseline $(3/4)^8 = 0.100$, confirming that PCA directions capture semantic structure beyond chance.
+    \item \textbf{Training recall is low} ($\leq$45\%), ruling out memorization: the system generalizes from embedding geometry, not from remembering specific pairs.
 \end{itemize}
 
 % ============================================================
@@ -491,30 +528,54 @@ The projection $\mathbb{R}^{384} \to \mathbb{Z}$ is inherently lossy. ``Happy'' 
 
 \subsection{What Primes Add Beyond Bitstrings}
 
-We compared prime-factorization subsumption against standard Hamming-space Jaccard similarity on bitstrings (the conventional LSH output) across $k \in \{6, 8, 12\}$. Prime divisibility consistently achieves a higher true-positive rate than the best Jaccard threshold for hypernym detection, while bitstrings offer no subsumption, composition, or gap analysis at all.
+We compared prime-factorization subsumption against standard Hamming-space Jaccard similarity on bitstrings (the conventional LSH output) across $k \in \{6, 8, 12\}$. Prime divisibility consistently achieves a higher true-positive rate than the best Jaccard threshold for hypernym detection. All prime algebraic operations have exact bitwise equivalents, confirmed by 1{,}000 exhaustive equivalence tests in companion work~\cite{ornelas2026triadicgpt}. Table~\ref{tab:comparison} summarises the correspondence.
 
 \begin{table}[h]
 \centering
-\caption{Capabilities: bitstrings vs.\ prime factorization.}
+\caption{Capabilities: bitstrings vs.\ prime factorization. All operations are available in both representations; the prime encoding's contribution is its native algebraic interface to declarative reasoning systems (SQL, Prolog).}
 \label{tab:comparison}
-\begin{tabular}{lcc}
+\begin{tabular}{lccc}
 \toprule
-Operation & Bitstrings & Primes (ours) \\
+Operation & Bitstrings & Primes (ours) & Equivalence \\
 \midrule
-Similarity & \checkmark (Hamming) & \checkmark (GCD ratio) \\
-Subsumption & $\times$ & \checkmark ($A \bmod B\!=\!0$) \\
-Composition & $\times$ & \checkmark (LCM) \\
-Gap Decomposition & $\times$ & \checkmark (GCD + quotients) \\
-Deterministic (PCA) & \checkmark & \checkmark \\
+Similarity & \checkmark (Hamming) & \checkmark (GCD ratio) & --- \\
+Subsumption & \checkmark ($(A \mathbin{\&} B)\!=\!B$) & \checkmark ($A \bmod B\!=\!0$) & Isomorphic \\
+Composition & \checkmark ($A \mid B$) & \checkmark (LCM) & Isomorphic \\
+Gap Decomposition & \checkmark ($A \mathbin{\&} {\sim}B$) & \checkmark (GCD + quotients) & Isomorphic \\
+Deterministic & \checkmark & \checkmark & --- \\
+Declarative integration & --- & \checkmark (SQL, Prolog) & Prime-native \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\noindent For pure nearest-neighbor search, \textbf{bitstrings are faster and sufficient}. The prime encoding is justified \emph{only} when downstream tasks require logical verification, composition, or explanatory decomposition.
+\noindent For pure nearest-neighbor search, \textbf{bitstrings are faster and sufficient}. The prime encoding is justified when downstream tasks require integration with declarative reasoning engines (PostgreSQL, SWI-Prolog) where integer divisibility is a built-in primitive. The prime representation's contribution is therefore not informational but \emph{interfacial}: it provides a single representation natively compatible with both neural pipelines and symbolic reasoning systems.
+
+\subsection{Prime--Bitwise Isomorphism}
+
+\noindent\textbf{Proposition.} \emph{Every prime algebraic operation has an exact bitwise equivalent:}
+
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+\textbf{Operation} & \textbf{Prime space} & \textbf{Bit space} \\
+\midrule
+Shared features & $\gcd(A, B)$ & $A \mathbin{\&} B$ \\
+Feature union & $\text{lcm}(A, B)$ & $A \mathbin{|} B$ \\
+Subsumption & $A \bmod B = 0$ & $(A \mathbin{\&} B) = B$ \\
+Unique to $A$ & $A / \gcd(A,B)$ & $A \mathbin{\&} {\sim}B$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent\textbf{Proof sketch.} Each concept's prime signature $\prod p_i^{b_i}$ (with $b_i \in \{0,1\}$) is isomorphic to the bitmask $\sum b_i \cdot 2^{i-1}$. The isomorphism $\varphi$ maps $p_i \to 2^{i-1}$ and is a lattice homomorphism from $(\mathbb{Z}^+, \mid, \gcd, \text{lcm})$ to $(\{0,1\}^k, \subseteq, \mathbin{\&}, \mathbin{|})$. \emph{Exhaustive verification:} 1{,}000 random bit configurations were tested across all four operations, with 1{,}000/1{,}000 passing (companion \texttt{BitwiseValidator}~\cite{ornelas2026triadicgpt}).
+
+\smallskip
+\noindent\textbf{Implication.} The prime representation adds no information-theoretic content beyond the binary activation vector. Its contribution is \emph{interfacial}: it provides a single representation natively compatible with both neural pipelines and declarative reasoning systems (SQL, Prolog) where integer divisibility is a built-in primitive.
 
 \subsection{Connection to Formal Concept Analysis}
 
-Our prime lattice resembles the concept lattice in Formal Concept Analysis~\cite{ganter1999formal}, where concepts are ordered by extent/intent inclusion. Bridging continuous embeddings to formal concept lattices via prime factorization is a promising future direction.
+Our prime lattice resembles the concept lattice in Formal Concept Analysis~\cite{ganter1999formal}, where concepts are ordered by extent/intent inclusion. The lattice constructed by prime encoding is a Boolean lattice $\mathcal{B}_k$ rather than a genuine concept lattice from FCA. Bridging continuous embeddings to formal concept lattices via prime factorization is a promising future direction.
 
 \subsection{Practical Integration with Declarative Systems}
 
@@ -525,7 +586,7 @@ The prime encoding enables zero-overhead integration with legacy symbolic system
 % ============================================================
 \section{Conclusion}
 
-We have presented a lightweight mechanism for projecting neural embeddings into composite prime integers, enabling exact algebraic operations---subsumption, composition, and gap analysis---impossible under standard vector similarity. The method achieves an approximately $28.4\times$ speedup with deterministic outputs and 100\% composition correctness.
+We have presented a lightweight mechanism for projecting neural embeddings into composite prime integers, enabling exact algebraic operations---subsumption, composition, and gap analysis---not expressible as single symmetric operations under standard vector similarity. The method achieves a $30.9\times$ speedup over naive cosine and $5.4\times$ over pre-normalized cosine (the more relevant baseline), with algebraically deterministic outputs (given a fixed projection) and 100\% composition correctness.
 
 Three projection improvements address the core limitation of random hyperplanes: PCA-directed projections improve discriminative power by $2$--$4\times$, multi-seed consensus filtering stabilizes encodings, and contrastive hyperplane learning achieves \textbf{100\% hypernym detection} at $k\!=\!6$ with a $4.8\times$ improvement over random baselines.
 
@@ -544,13 +605,13 @@ This work contributes a tool to the neurosymbolic toolkit---not replacing contin
 
 \subsection{Companion Work}
 
-This paper is the first in a series of four publications on triadic neurosymbolic methods.
-The algebraic framework introduced here---post-hoc projection of pre-trained embeddings into composite prime integers---serves as the foundation for three companion papers that extend it in complementary directions:
+This work is part of a four-paper program on triadic neurosymbolic representations. The present paper's claims are evaluated independently; companion results provide additional context but are not required for the conclusions drawn here.
+The algebraic framework introduced here---post-hoc projection of pre-trained embeddings into composite prime integers---is extended in three companion papers:
 
 \begin{enumerate}[nosep, leftmargin=*]
     \item \textbf{End-to-end learning} (Ornelas Brand, 2026b; \href{https://doi.org/10.5281/zenodo.19206545}{doi:10.5281/zenodo.19206545}). A 40M-parameter GPT learns composite prime signatures alongside language modeling via a linear triadic projection head, achieving 98\% analogy verification and 100\% signature uniqueness at near-zero language cost (+1.7\% perplexity). This moves the triadic framework from post-hoc analysis to native model capability.
     \item \textbf{Representation observability} (Ornelas Brand, 2026c; \href{https://doi.org/10.5281/zenodo.19208672}{doi:10.5281/zenodo.19208672}). \texttt{reptimeline} provides tooling for tracking how discrete representations evolve during training---lifecycle events (birth, death, stabilization), phase transitions, bottom-up ontology discovery, and causal intervention verification. Applied to MNIST autoencoders, Pythia-70M sparse autoencoders, and the triadic GPT above.
-    \item \textbf{Algebraic duality structure} (Ornelas Brand, 2026d). Proposes 14+ fundamental dualities across 6 algebraic layers, validated through domain analysis (9 disciplines, IDVS metric) and neurosymbolic learning (GPT-2 + 72-bit triadic head). Extends the prime encoding with an ontological structure grounded in classical duality theory. \emph{In progress---core framework, validation scripts, and first-principles corpus complete; additional dualities under evaluation, independent rater validation and cross-lingual testing remain.}
+    \item \textbf{Algebraic duality structure} (Ornelas Brand, 2026d; \href{https://doi.org/10.5281/zenodo.19374914}{doi:10.5281/zenodo.19374914}). Proposes 14+ candidate dualities across 6 algebraic layers, evaluated through domain analysis (8 disciplines + 3 negative controls, composite 6-metric DVS) and neurosymbolic learning (GPT-2 + 72-bit triadic head). Extends the prime encoding with an ontological structure grounded in classical duality theory.
 \end{enumerate}
 
 \subsection{Software Availability}
