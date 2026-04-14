@@ -38,6 +38,10 @@ from api.models import (
     EncodeRequest, EncodeResponse, ConceptPrime,
     AuditRequest, AuditResponse, AuditDiscrepancy,
     SearchRequest, SearchResponse, SearchResult,
+    SubsumesRequest, SubsumesResponse,
+    ComposeRequest, ComposeResponse,
+    GapRequest, GapResponse,
+    AnalogyRequest, AnalogyResponse,
     HealthResponse,
 )
 
@@ -265,6 +269,108 @@ async def search_concepts(req: SearchRequest):
         query_prime=q_prime,
         total_indexed=len(prime_map),
         results=results,
+    )
+
+
+def _ensure_encoded(concept: str) -> int:
+    """Return the prime for a concept, encoding it on demand if not already loaded."""
+    prime_map = engine.get("prime_map", {})
+    if concept in prime_map:
+        return prime_map[concept]
+    enc = engine["encoder"]
+    mapper = DiscreteMapper(n_bits=engine["lsh_bits"], seed=engine["lsh_seed"])
+    emb = enc.encode([concept])
+    new_map = mapper.fit_transform([concept], emb)
+    engine["prime_map"].update(new_map)
+    return new_map[concept]
+
+
+@app.post("/subsumes", response_model=SubsumesResponse, tags=["Algebra"])
+async def check_subsumption(req: SubsumesRequest):
+    """
+    Check directional subsumption between two concepts.
+    A subsumes B iff A contains ALL semantic features of B (A % B == 0).
+    This operation is impossible under cosine similarity.
+    """
+    val = engine["validator"]
+    pa = _ensure_encoded(req.concept_a)
+    pb = _ensure_encoded(req.concept_b)
+    return SubsumesResponse(
+        concept_a=req.concept_a,
+        concept_b=req.concept_b,
+        prime_a=pa,
+        prime_b=pb,
+        a_subsumes_b=val.subsumes(pa, pb),
+        b_subsumes_a=val.subsumes(pb, pa),
+    )
+
+
+@app.post("/compose", response_model=ComposeResponse, tags=["Algebra"])
+async def compose_concepts(req: ComposeRequest):
+    """
+    Compose multiple concepts into a single prime product that subsumes all inputs.
+    compose(A, B) = lcm(Φ(A), Φ(B)) — guaranteed to contain all features of both.
+    This operation is impossible under cosine similarity.
+    """
+    val = engine["validator"]
+    primes = [_ensure_encoded(c) for c in req.concepts]
+    composed = val.compose(*primes)
+    return ComposeResponse(
+        concepts=req.concepts,
+        primes=primes,
+        composed_prime=composed,
+        composed_factors=val._prime_factors(composed),
+    )
+
+
+@app.post("/gap", response_model=GapResponse, tags=["Algebra"])
+async def analyze_gap(req: GapRequest):
+    """
+    Explain exactly which semantic features differ between two concepts.
+    Returns shared backbone, features unique to A, and features unique to B.
+    This deterministic decomposition is impossible with continuous vectors.
+    """
+    val = engine["validator"]
+    pa = _ensure_encoded(req.concept_a)
+    pb = _ensure_encoded(req.concept_b)
+    gap = val.explain_gap(pa, pb)
+    return GapResponse(
+        concept_a=req.concept_a,
+        concept_b=req.concept_b,
+        prime_a=pa,
+        prime_b=pb,
+        shared=gap["shared"],
+        only_in_a=gap["only_in_a"],
+        only_in_b=gap["only_in_b"],
+        a_contains_b=gap["a_contains_b"],
+        b_contains_a=gap["b_contains_a"],
+    )
+
+
+@app.post("/analogy", response_model=AnalogyResponse, tags=["Algebra"])
+async def predict_analogy(req: AnalogyRequest):
+    """
+    Resolve semantic analogies: A:B :: C:D.
+    Predicts D = (C × B) / A in prime space.
+    Designed for verification, not discovery (2-10% discovery accuracy).
+    """
+    val = engine["validator"]
+    pa = _ensure_encoded(req.concept_a)
+    pb = _ensure_encoded(req.concept_b)
+    pc = _ensure_encoded(req.concept_c)
+    result = val.analogy_prediction(pa, pb, pc)
+    return AnalogyResponse(
+        concept_a=req.concept_a,
+        concept_b=req.concept_b,
+        concept_c=req.concept_c,
+        prime_a=pa,
+        prime_b=pb,
+        prime_c=pc,
+        predicted_prime_d=int(result.output_value),
+        is_valid=result.is_valid,
+        is_hypothetical=result.is_hypothetical,
+        missing_factor=result.missing_factor,
+        trace=result.trace,
     )
 
 

@@ -76,6 +76,68 @@ class SearchResponse(BaseModel):
     results: List[SearchResult]
 
 
+class SubsumesRequest(BaseModel):
+    concept_a: str = Field(..., max_length=500, description="First concept (potential supertype)")
+    concept_b: str = Field(..., max_length=500, description="Second concept (potential subtype)")
+
+
+class SubsumesResponse(BaseModel):
+    concept_a: str
+    concept_b: str
+    prime_a: int
+    prime_b: int
+    a_subsumes_b: bool
+    b_subsumes_a: bool
+
+
+class ComposeRequest(BaseModel):
+    concepts: List[str] = Field(..., min_length=2, max_length=100, description="Concepts to compose")
+
+
+class ComposeResponse(BaseModel):
+    concepts: List[str]
+    primes: List[int]
+    composed_prime: int
+    composed_factors: List[int]
+
+
+class GapRequest(BaseModel):
+    concept_a: str = Field(..., max_length=500)
+    concept_b: str = Field(..., max_length=500)
+
+
+class GapResponse(BaseModel):
+    concept_a: str
+    concept_b: str
+    prime_a: int
+    prime_b: int
+    shared: int
+    only_in_a: int
+    only_in_b: int
+    a_contains_b: bool
+    b_contains_a: bool
+
+
+class AnalogyRequest(BaseModel):
+    concept_a: str = Field(..., max_length=500, description="A in A:B :: C:D")
+    concept_b: str = Field(..., max_length=500, description="B in A:B :: C:D")
+    concept_c: str = Field(..., max_length=500, description="C in A:B :: C:D")
+
+
+class AnalogyResponse(BaseModel):
+    concept_a: str
+    concept_b: str
+    concept_c: str
+    prime_a: int
+    prime_b: int
+    prime_c: int
+    predicted_prime_d: int
+    is_valid: bool
+    is_hypothetical: bool
+    missing_factor: Optional[int] = None
+    trace: str
+
+
 class HealthResponse(BaseModel):
     engine: str = "Triadic Neurosymbolic Engine"
     version: str = "0.2.0"
