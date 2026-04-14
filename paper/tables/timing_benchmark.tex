@@ -1,15 +1,16 @@
 \begin{table}[h]
 \centering
-\caption{Computational efficiency: Cosine similarity vs.\ Prime GCD for pairwise relationship verification (50000 operations).}
+\caption{Computational efficiency: Cosine similarity variants vs.\ Prime GCD (50000 pairwise operations). Batch computes all $n^2$ pairs via matrix multiply.}
 \label{tab:timing}
-\begin{tabular}{lccc}
+\begin{tabular}{lcccc}
 \toprule
-Method & Time (s) & Ops/sec & Output Type \\
+Method & Time (s) & Ops/sec & Speedup & Output \\
 \midrule
-Cosine Similarity & 0.2048 & 244,083 & Probabilistic \\
-Prime GCD (ours) & 0.0072 & 6,942,345 & Deterministic \\
-\midrule
-\textbf{Speedup} & \multicolumn{3}{c}{\textbf{28.4$\times$}} \\
+Cosine (naive) & 0.4145 & 120,634 & 1.0$\times$ & Probabilistic \\
+Cosine (pre-normed) & 0.0720 & 694,086 & 5.8$\times$ & Probabilistic \\
+Prime GCD (ours) & 0.0134 & 3,728,311 & 30.9$\times$ & Deterministic \\
 \bottomrule
 \end{tabular}
+\vspace{2pt}
+\small{Note: Speedup relative to naive cosine. Pre-normalization eliminates redundant norm computation.}
 \end{table}

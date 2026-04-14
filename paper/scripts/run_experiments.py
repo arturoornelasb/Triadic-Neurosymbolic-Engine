@@ -90,14 +90,35 @@ def experiment_1_timing():
     
     N_VALIDATIONS = 50000
     pairs = [(random.choice(VOCAB_FULL), random.choice(VOCAB_FULL)) for _ in range(N_VALIDATIONS)]
-    
-    # --- Cosine similarity ---
+
+    # --- Cosine similarity (naive: recomputes norms per pair) ---
     t0 = time.perf_counter()
     for w1, w2 in pairs:
         v1, v2 = emb_dict[w1], emb_dict[w2]
         cos_sim = np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
-    t_cosine = time.perf_counter() - t0
-    
+    t_cosine_naive = time.perf_counter() - t0
+
+    # --- Cosine similarity (optimized: pre-normalized vectors) ---
+    normed_dict = {}
+    for w, v in emb_dict.items():
+        n = np.linalg.norm(v)
+        normed_dict[w] = v / n if n > 0 else v
+    t0 = time.perf_counter()
+    for w1, w2 in pairs:
+        cos_sim = np.dot(normed_dict[w1], normed_dict[w2])
+    t_cosine_opt = time.perf_counter() - t0
+
+    # --- Cosine similarity (batch: matrix multiply all-pairs) ---
+    words_list = list(emb_dict.keys())
+    emb_matrix = np.array([emb_dict[w] for w in words_list])
+    norms = np.linalg.norm(emb_matrix, axis=1, keepdims=True)
+    norms[norms == 0] = 1.0
+    normed_matrix = emb_matrix / norms
+    t0 = time.perf_counter()
+    sim_matrix = np.dot(normed_matrix, normed_matrix.T)
+    t_cosine_batch = time.perf_counter() - t0
+    n_batch_ops = len(words_list) ** 2
+
     # --- Prime GCD ---
     t0 = time.perf_counter()
     for w1, w2 in pairs:
@@ -106,34 +127,41 @@ def experiment_1_timing():
         only_1 = p1 // g
         only_2 = p2 // g
     t_gcd = time.perf_counter() - t0
-    
-    speedup = t_cosine / t_gcd
-    
-    print(f"  Cosine: {t_cosine:.4f}s for {N_VALIDATIONS} ops")
-    print(f"  GCD:    {t_gcd:.4f}s for {N_VALIDATIONS} ops")
-    print(f"  Speedup: {speedup:.1f}x")
+
+    speedup_naive = t_cosine_naive / t_gcd
+    speedup_opt = t_cosine_opt / t_gcd
+
+    print(f"  Cosine (naive):        {t_cosine_naive:.4f}s for {N_VALIDATIONS} ops")
+    print(f"  Cosine (pre-normed):   {t_cosine_opt:.4f}s for {N_VALIDATIONS} ops")
+    print(f"  Cosine (batch matrix): {t_cosine_batch:.4f}s for {n_batch_ops} ops")
+    print(f"  GCD:                   {t_gcd:.4f}s for {N_VALIDATIONS} ops")
+    print(f"  Speedup vs naive:      {speedup_naive:.1f}x")
+    print(f"  Speedup vs pre-normed: {speedup_opt:.1f}x")
     
     # Save results
     with open(os.path.join(OUTPUT_DIR, "experiment1_timing.csv"), "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["method", "time_seconds", "n_operations", "ops_per_second"])
-        w.writerow(["cosine_similarity", f"{t_cosine:.6f}", N_VALIDATIONS, f"{N_VALIDATIONS/t_cosine:.0f}"])
+        w.writerow(["cosine_naive", f"{t_cosine_naive:.6f}", N_VALIDATIONS, f"{N_VALIDATIONS/t_cosine_naive:.0f}"])
+        w.writerow(["cosine_prenormed", f"{t_cosine_opt:.6f}", N_VALIDATIONS, f"{N_VALIDATIONS/t_cosine_opt:.0f}"])
+        w.writerow(["cosine_batch", f"{t_cosine_batch:.6f}", n_batch_ops, f"{n_batch_ops/t_cosine_batch:.0f}"])
         w.writerow(["prime_gcd", f"{t_gcd:.6f}", N_VALIDATIONS, f"{N_VALIDATIONS/t_gcd:.0f}"])
-    
+
     # Generate LaTeX table
     with open(os.path.join(TABLES_DIR, "timing_benchmark.tex"), "w") as f:
         f.write("\\begin{table}[h]\n\\centering\n")
-        f.write("\\caption{Computational efficiency: Cosine similarity vs.\\ Prime GCD for pairwise relationship verification (%d operations).}\n" % N_VALIDATIONS)
+        f.write("\\caption{Computational efficiency: Cosine similarity variants vs.\\ Prime GCD (%d pairwise operations). Batch computes all $n^2$ pairs via matrix multiply.}\n" % N_VALIDATIONS)
         f.write("\\label{tab:timing}\n")
-        f.write("\\begin{tabular}{lccc}\n\\toprule\n")
-        f.write("Method & Time (s) & Ops/sec & Output Type \\\\\n\\midrule\n")
-        f.write("Cosine Similarity & %.4f & %s & Probabilistic \\\\\n" % (t_cosine, f"{N_VALIDATIONS/t_cosine:,.0f}"))
-        f.write("Prime GCD (ours) & %.4f & %s & Deterministic \\\\\n" % (t_gcd, f"{N_VALIDATIONS/t_gcd:,.0f}"))
-        f.write("\\midrule\n")
-        f.write("\\textbf{Speedup} & \\multicolumn{3}{c}{\\textbf{%.1f$\\times$}} \\\\\n" % speedup)
-        f.write("\\bottomrule\n\\end{tabular}\n\\end{table}\n")
-    
-    return t_cosine, t_gcd, speedup
+        f.write("\\begin{tabular}{lcccc}\n\\toprule\n")
+        f.write("Method & Time (s) & Ops/sec & Speedup & Output \\\\\n\\midrule\n")
+        f.write("Cosine (naive) & %.4f & %s & 1.0$\\times$ & Probabilistic \\\\\n" % (t_cosine_naive, f"{N_VALIDATIONS/t_cosine_naive:,.0f}"))
+        f.write("Cosine (pre-normed) & %.4f & %s & %.1f$\\times$ & Probabilistic \\\\\n" % (t_cosine_opt, f"{N_VALIDATIONS/t_cosine_opt:,.0f}", t_cosine_naive / t_cosine_opt))
+        f.write("Prime GCD (ours) & %.4f & %s & %.1f$\\times$ & Deterministic \\\\\n" % (t_gcd, f"{N_VALIDATIONS/t_gcd:,.0f}", speedup_naive))
+        f.write("\\bottomrule\n\\end{tabular}\n")
+        f.write("\\vspace{2pt}\n\\small{Note: Speedup relative to naive cosine. Pre-normalization eliminates redundant norm computation.}\n")
+        f.write("\\end{table}\n")
+
+    return t_cosine_naive, t_cosine_opt, t_gcd, speedup_naive, speedup_opt
 
 
 def experiment_2_k_sweep():
@@ -454,7 +482,7 @@ if __name__ == "__main__":
     print("Running Paper Experiment Suite")
     print("=" * 60)
     
-    t_cos, t_gcd, speedup = experiment_1_timing()
+    t_naive, t_opt, t_gcd, sp_naive, sp_opt = experiment_1_timing()
     k_results = experiment_2_k_sweep()
     sub_results = experiment_3_subsumption()
     total, holds = experiment_4_composition()
