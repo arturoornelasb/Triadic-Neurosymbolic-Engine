@@ -42,7 +42,7 @@
 %  ABSTRACT
 % ============================================================
 \begin{abstract}
-We propose a method for bridging continuous neural embeddings and discrete symbolic reasoning by mapping dense vectors to \emph{composite prime integers} via Locality Sensitive Hashing (LSH), effectively enabling exact set operations on LSH signatures via unique factorization. Each LSH hyperplane is assigned a unique prime; a concept's integer is the product of primes for its active hyperplanes. This encoding yields three algebraic operations \textbf{not expressible as a single symmetric cosine operation}: (1)~\emph{logical subsumption} via divisibility, (2)~\emph{concept composition} via LCM, and (3)~\emph{abductive gap analysis} via GCD factorization. These operations have exact bitwise equivalents; the prime representation's value is its native algebraic interface to declarative systems. We benchmark on a 107-word vocabulary across a series of 10~experiments including held-out evaluation on 67~unseen hypernym pairs, achieving $28.4\times$ faster pairwise verification than cosine similarity, and provide honest analysis of limitations. Code: \url{https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine}.
+We propose a method for bridging continuous neural embeddings and discrete symbolic reasoning by mapping dense vectors to \emph{composite prime integers} via Locality Sensitive Hashing (LSH), effectively enabling exact set operations on LSH signatures via unique factorization. Each LSH hyperplane is assigned a unique prime; a concept's integer is the product of primes for its active hyperplanes. This encoding yields three algebraic operations \textbf{not expressible as a single symmetric cosine operation}: (1)~\emph{logical subsumption} via divisibility, (2)~\emph{concept composition} via LCM, and (3)~\emph{abductive gap analysis} via GCD factorization. These operations have exact bitwise equivalents; the prime representation's value is its native algebraic interface to declarative systems. We benchmark on a 107-word vocabulary across a series of 10~experiments including held-out evaluation on 67~unseen hypernym pairs, achieving $30.9\times$ faster pairwise verification than naive cosine similarity ($5.4\times$ over pre-normalized cosine), and provide honest analysis of limitations. Code: \url{https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine}.
 \end{abstract}
 
 \smallskip
@@ -274,12 +274,12 @@ We test divisibility against 11 known hypernym pairs (e.g., Animal~$\supset$~Dog
 \toprule
 $k$ & True Positive Rate & False Positive Rate \\
 \midrule
-3 & 56.4\% $\pm$ 22.2\% & 47.4\% $\pm$ 9.3\% \\
-4 & 50.0\% $\pm$ 22.7\% & 40.0\% $\pm$ 7.3\% \\
-6 & 39.1\% $\pm$ 17.7\% & 22.0\% $\pm$ 4.9\% \\
-8 & 24.5\% $\pm$ 11.5\% & 14.4\% $\pm$ 3.4\% \\
-12 & 15.5\% $\pm$ 9.1\% & 6.3\% $\pm$ 2.1\% \\
-16 & 10.0\% $\pm$ 8.6\% & 2.5\% $\pm$ 1.1\% \\
+3 & 56.4\% $\pm$ 22.2\% & 48.4\% $\pm$ 11.3\% \\
+4 & 50.0\% $\pm$ 22.7\% & 35.7\% $\pm$ 7.4\% \\
+6 & 39.1\% $\pm$ 17.7\% & 25.9\% $\pm$ 6.1\% \\
+8 & 24.5\% $\pm$ 11.5\% & 16.2\% $\pm$ 4.7\% \\
+12 & 15.5\% $\pm$ 9.1\% & 6.6\% $\pm$ 1.7\% \\
+16 & 10.0\% $\pm$ 8.6\% & 2.2\% $\pm$ 1.8\% \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -308,8 +308,8 @@ We test the classic analogy task $A:B::C:?$ using GCD-based search over the voca
 \toprule
 $k$ & Correct / Total & Accuracy \\
 \midrule
-3 & 1 / 50 & 2.0\% \\
-6 & 1 / 50 & 2.0\% \\
+3 & 0 / 50 & 0.0\% \\
+6 & 0 / 50 & 0.0\% \\
 8 & 1 / 50 & 2.0\% \\
 12 & 5 / 50 & 10.0\% \\
 \bottomrule
@@ -352,14 +352,14 @@ These decompositions are \textbf{not available} from cosine similarity, which ca
 
 \subsection{Experiment 7: Industrial-Scale Benchmark ($N=20{,}000$)}
 
-To confirm the scalability of the proposed method, we tested logical verification on a larger vocabulary: $20{,}000$ unique concepts extracted from WordNet. This benchmark executes $50{,}000$ iterative verification operations comparing continuous vectors vs.\ integers:
+To confirm the scalability of the proposed method, we tested a richer relational primitive on a larger vocabulary: $20{,}000$ unique concepts extracted from WordNet. This benchmark executes $50{,}000$ iterative validation operations:
 
 \begin{itemize}[nosep, leftmargin=*]
-    \item \textbf{Vector Approach:} Cosine similarity matrix operations over $\mathbb{R}^{384}$.
-    \item \textbf{Discrete Approach (ours):} Integer GCD and modulo operations.
+    \item \textbf{Vector Approach:} \texttt{cosine\_similarity} from scikit-learn over $\mathbb{R}^{384}$.
+    \item \textbf{Discrete Approach (ours):} Full \texttt{analogy\_prediction} ($A\!:\!B\!::\!C\!:\!D$) via composite GCD/modulo factor decomposition --- a strictly heavier operation than the single-pair GCD measured in Experiment~1.
 \end{itemize}
 
-\textbf{Results:} The integer-based validation process operated approximately \textbf{28.4$\times$ faster} than continuous vectors (depending on hardware backend), utilizing an $O(1)$ memory footprint per operation since it relies on native CPU registers rather than matrix allocation. This serves as a useful and ultra-fast proxy for evaluating relationships at scale.
+\textbf{Results:} The integer-based validation process operated approximately \textbf{28.4$\times$ faster} than continuous vectors. The slight reduction relative to Experiment~1 (30.9$\times$) is expected: the discrete operation here is a complete analogy resolution, not a single GCD. Memory remained $O(1)$ per operation since it relies on native CPU registers rather than matrix allocation. This serves as a useful proxy for evaluating richer relationships at scale.
 
 \subsection{Experiment 8: Relational Bias Auditing via Topological Shortest Paths}
 
@@ -416,7 +416,7 @@ Equality  & Political  & $\times$ & $\{5,7,11,17\}$   & $\{3,19\}$   & $\{2,13\}
     \item \textbf{None of the 20 concepts} reached consensus ($100\%$ factor agreement), confirming that models with similar cosine profiles can have markedly different discrete structures.
 \end{itemize}
 
-\textbf{Scale results:} Across the full 20{,}000-concept WordNet audit, we evaluated approximately 2~million possible semantic chains (shortest paths). The process identified $108{,}694$ ($5.4\%$) differing relational paths---instances where one model maintained a short semantic chain while the other topologically severed it. This provides a direct, exact technique for model traceability and bias detection.
+\textbf{Scale results:} Across a $2{,}000$-concept WordNet audit (\texttt{wordnet\_2k.csv}), we evaluated all $1{,}999{,}000$ possible semantic chains (shortest paths between concept pairs). The process identified $108{,}694$ ($5.4\%$) differing relational paths---instances where one model maintained a short semantic chain while the other topologically severed it. This provides a direct, exact technique for model traceability and bias detection.
 
 \subsection{Experiment 9: Projection Method Comparison}
 
@@ -453,11 +453,13 @@ $k$ & Method & TP Rate & FP Rate & TP--FP Gap \\
 12 & Contrastive & \textbf{69.2\%} & 4.6\%  & \textbf{+64.6\%} \\
 \bottomrule
 \end{tabular}
+\vspace{2pt}
+\small{Note: The contrastive optimizer is gradient-free and converges to different local optima depending on vocabulary ordering. The 100\% TP at $k\!=\!6$ is from a single run; deterministic sorted-vocabulary order yields $96.2\%$, with an observed range of $92$--$100\%$ across orderings.}
 \end{table}
 
 \noindent\textbf{Key findings:}
 \begin{itemize}[nosep, leftmargin=*]
-    \item \textbf{Contrastive learning} achieves 100\% true positive rate at $k\!=\!6$ with a TP--FP gap of $+84\%$---a \textbf{4.8$\times$ improvement} over random projections. This confirms that hyperplane directions can encode genuine semantic relationships when guided by supervision.
+    \item \textbf{Contrastive learning} achieves up to 100\% true positive rate at $k\!=\!6$ (deterministic sorted-vocab: $96.2\%$) with a TP--FP gap of $+84\%$---a \textbf{4.8$\times$ improvement} over random projections. This confirms that hyperplane directions can encode genuine semantic relationships when guided by supervision.
     \item \textbf{PCA} provides a strong unsupervised baseline, achieving $2$--$4\times$ better gaps than random without requiring labeled data.
     \item \textbf{Consensus} (threshold$=0.7$) matches or exceeds PCA at $k\!=\!12$, offering a complementary approach that filters noise through statistical voting.
     \item \textbf{False positive rates decrease} consistently as $k$ increases across all methods, confirming that higher $k$ improves specificity at the cost of sensitivity.
