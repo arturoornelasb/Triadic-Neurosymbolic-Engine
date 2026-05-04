@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "triadic-engine"
-version = "0.3.0"
+version = "0.4.0"
 description = "Deterministic AI auditing and semantic validation via prime factorization — 30.9x faster than cosine, fully explainable"
 readme = "README.md"
 requires-python = ">=3.10"
