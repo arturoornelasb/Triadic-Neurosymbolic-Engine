@@ -1,5 +1,4 @@
 """Tests for PrimeIndexDB — SQLite persistence layer."""
-import os
 import pytest
 from neurosym.storage import PrimeIndexDB
 
