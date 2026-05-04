@@ -13,6 +13,8 @@ Cosine similarity tells you *"King and Queen are 0.87 similar"* — a black-box 
 
 The Triadic Engine tells you *"King = 2×3×5 and Queen = 2×5×7. They share {2,5} (Royalty). King has {3} (Male) that Queen lacks. Queen has {7} (Female) that King lacks."* — fully transparent, deterministic decomposition.
 
+> 📚 **This engine is part of a broader research programme** spanning a computational substrate (P1–P4) and a formal algebraic framework (quaternionic logic, non-commutative t-norms, duality synthesis, pre-logical states — P11–P13). For the full catalogue of papers and how they connect, see [**github.com/arturoornelasb**](https://github.com/arturoornelasb).
+
 ---
 
 ## Why not cosine similarity?
@@ -130,6 +132,19 @@ Each concept becomes a single integer whose **prime factors are its semantic fea
 **Compliance Validation** — Verify that "GDPR" subsumes "consent" and "data-subject-rights" in your ontology. Machine-checkable, not fuzzy.
 
 **Anomaly Detection** — Tabular rows that break the multiplicative patterns of their peers are flagged as anomalies — with a proof, not just a score.
+
+---
+
+## Open Questions
+
+Concrete questions the paper leaves genuinely unresolved — useful as entry points for collaborators, replications, or follow-ups.
+
+- **Choosing `k` in a principled way.** The useful regime `k ∈ [6, 12]` for the LSH projection is empirical. Is there a corpus-intrinsic criterion (e.g. based on the spectral structure of the embedding covariance) that selects optimal `k` a priori, or is the choice irreducibly heuristic?
+- **When does LSH containment coincide with semantic subsumption?** The method guarantees an exact equivalence between divisibility and LSH bucket containment, but bucket containment is only a *probabilistic* proxy for genuine semantic subsumption — changing the random seed can reverse the relationship. Under which conditions on the embedding geometry do the two coincide reliably?
+- **A theoretical bound on the false-positive rate.** Random hyperplanes give a baseline FPR of `(3/4)^k` for spurious subsumption. PCA-directed projections achieve ≈ 0.62× that baseline empirically, but no closed-form bound exists. Can the FPR for a given projection mode be expressed analytically in terms of the spectral structure of the corpus?
+- **Cross-modal generalisation.** The framework was evaluated on text embeddings (`sentence-transformers`). Does the projection Φ transfer to vision-language (CLIP), audio, or knowledge-graph embeddings without re-engineering?
+
+Discussion welcome via [GitHub Discussions](https://github.com/arturoornelasb/Triadic-Neurosymbolic-Engine/discussions) or email (arturoornelas62@gmail.com).
 
 ---
 
