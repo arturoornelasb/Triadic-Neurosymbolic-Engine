@@ -66,3 +66,4 @@ Paper         = "https://doi.org/10.5281/zenodo.19205805"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+exclude = ["neurosym._archived", "neurosym._archived.*"]
