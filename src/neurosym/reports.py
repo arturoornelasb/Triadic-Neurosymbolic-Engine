@@ -8,7 +8,7 @@ import json
 import csv
 import io
 import html as html_mod
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, List
 
 
@@ -28,7 +28,7 @@ class ReportGenerator:
     
     def __init__(self, title: str = "Triadic Neurosymbolic Audit Report"):
         self.title = title
-        self.timestamp = datetime.utcnow().isoformat()
+        self.timestamp = datetime.now(timezone.utc).isoformat()
         self.sections: List[dict] = []
     
     def add_encoding_section(self, prime_map: Dict[str, int], model: str, lsh_bits: int, factorize_fn=None):
