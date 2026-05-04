@@ -19,7 +19,7 @@ The Triadic Engine tells you *"King = 2×3×5 and Queen = 2×5×7. They share {2
 
 | | Cosine Similarity | **Triadic Engine** |
 |---|:---:|:---:|
-| Speed (50K pairs) | baseline | **28.4× faster** |
+| Speed (50K pairs) | baseline | **30.9× faster** |
 | Explainability | Black box | ✅ Prime factor proof |
 | Subsumption (`A ⊆ B`?) | ❌ Approximation | ✅ Exact (`Φ(A) mod Φ(B) == 0`) |
 | Composition (`A ∪ B`) | ❌ Geometric average | ✅ `lcm(Φ(A), Φ(B))` |
@@ -101,7 +101,7 @@ Each concept becomes a single integer whose **prime factors are its semantic fea
 | `random` | ✗ (seed-dependent) | ✗ | Baseline, exploration |
 | `pca` | ✓ | ✗ | Production, reproducibility |
 | `consensus` | ✓ | ✗ | Noise filtering, stability analysis |
-| `contrastive` | ✓ | ✓ (hypernym pairs) | Maximum accuracy (100% TP at k=6) |
+| `contrastive` | ✓ | ✓ (hypernym pairs) | Maximum accuracy (up to 100% TP at k=6; 96.2% deterministic) |
 
 ---
 
@@ -159,6 +159,10 @@ uvicorn api.server:app --host 0.0.0.0 --port 8000
 | `/encode` | POST | Encode concepts into composite prime integers |
 | `/audit` | POST | Compare two embedding models topologically |
 | `/search` | POST | GCD-based semantic search over indexed concepts |
+| `/subsumes` | POST | Directional subsumption (`A ⊇ B` ↔ `Φ(A) mod Φ(B) == 0`) |
+| `/compose` | POST | LCM composition — concept containing all input features |
+| `/gap` | POST | Abductive gap analysis (shared GCD + unique factors) |
+| `/analogy` | POST | Resolve `A:B :: C:?` analogies in prime space |
 | `/report` | GET | Export engine state as HTML, JSON, or CSV |
 
 Interactive docs at `http://localhost:8000/docs` (Swagger UI).
@@ -181,10 +185,10 @@ python scripts/benchmark_pca.py
 
 | Metric | Result |
 |--------|--------|
-| Pairwise verification speed | **28.4× faster** than cosine (50K operations) |
+| Pairwise verification speed | **30.9× faster** than cosine (50K operations); **5.4×** vs pre-normalized cosine |
 | Composition guarantee | **100%** verified across 5,671 word pairs |
-| Hypernym detection accuracy | **100% TP** with contrastive projection at k=6 |
-| Model audit scale | **108,694 discrepancies** in 2M semantic chains (2 models) |
+| Hypernym detection accuracy | **up to 100% TP** with contrastive projection at k=6 (96.2% deterministic) |
+| Model audit scale | **108,694 discrepancies** in 1,999,000 semantic chains (WordNet 2K, 2 models) |
 
 ---
 

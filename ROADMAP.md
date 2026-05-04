@@ -8,9 +8,9 @@ What remains for the Triadic Neurosymbolic Engine to be production-ready and com
 
 ### Test coverage
 
-- [ ] `PrimeIndexDB` — 8 public methods, 0 tests (save/load/delete/export/list)
-- [ ] `ScalableGraphBuilder` — 5 public methods, 0 tests (build_index, find_edges, find_neighbors, get_stats)
-- [ ] `ReportGenerator` — 8 public methods, 0 tests (to_html, to_json, to_csv, save)
+- [x] `PrimeIndexDB` — 7 public methods, 9 tests (save/load/upsert/list/delete/export/concept_count)
+- [x] `ScalableGraphBuilder` — 4 public methods, 9 tests (build_index, find_edges, find_neighbors, get_stats)
+- [x] `ReportGenerator` — 7 public methods, 9 tests (to_html, to_json, to_csv, save, add_encoding/audit/graph_section)
 - [ ] `OpenAIEncoder` / `CohereEncoder` — 0 tests (require API keys; add with `@pytest.mark.skipif`)
 - [ ] `DiscreteMapper.get_factor()` — exported but never tested
 - [ ] `create_encoder()` factory — exported but never tested
@@ -18,13 +18,13 @@ What remains for the Triadic Neurosymbolic Engine to be production-ready and com
 
 ### REST API completeness
 
-The API server (`api/server.py`) only exposes 5 of the engine's core operations:
+The API server (`api/server.py`) exposes 9 of the engine's core operations:
 
 - [x] `/health`, `/encode`, `/audit`, `/search`, `/report`
-- [ ] `/subsumes` — `DiscreteValidator.subsumes()`
-- [ ] `/compose` — `DiscreteValidator.compose()`
-- [ ] `/gap` — `DiscreteValidator.explain_gap()`
-- [ ] `/analogy` — `DiscreteValidator.analogy_prediction()`
+- [x] `/subsumes` — `DiscreteValidator.subsumes()`
+- [x] `/compose` — `DiscreteValidator.compose()`
+- [x] `/gap` — `DiscreteValidator.explain_gap()`
+- [x] `/analogy` — `DiscreteValidator.analogy_prediction()`
 - [ ] `/save-index`, `/load-index` — `PrimeIndexDB` persistence
 
 ### API hardening
@@ -88,7 +88,7 @@ The engine library is BUSL-1.1 (source-available, not open-source), and a hosted
 - [ ] API reference with request/response examples for every endpoint
 - [ ] Integration guides: Python, SQL (PostgreSQL), Prolog (appendix already in paper)
 - [ ] Jupyter notebooks for each use case (RAG, auditing, deduplication, anomaly detection)
-- [ ] CHANGELOG.md — no version history exists
+- [x] CHANGELOG.md — version history (Unreleased + 0.3.0 + 0.2.0)
 
 ### Licensing clarity
 
@@ -125,4 +125,4 @@ The engine library is BUSL-1.1 (source-available, not open-source), and a hosted
 8. **Hash coincidence != semantic containment** — subsumption reflects LSH bucket overlap, not genuine semantic containment. Changing the seed can reverse relationships.
 9. **Lossy projection** — R^384 -> Z is inherently lossy. "Happy" and "elated" may get identical encodings.
 10. **Useful k range is narrow** — k=6-12 is the practical regime; no principled selection method exists.
-11. **Analogy accuracy is low** — 2-10% (paper Experiment 5). The method is for *verification*, not *discovery*.
+11. **Analogy accuracy is low** — 0-10% (paper Experiment 5). The method is for *verification*, not *discovery*.
