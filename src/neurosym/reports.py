@@ -17,7 +17,7 @@ def _engine_version() -> str:
         from importlib.metadata import version
         return version("triadic-engine")
     except Exception:
-        return "0.2.0"
+        return "0.3.0"
 
 
 class ReportGenerator:
